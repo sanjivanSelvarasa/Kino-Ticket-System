@@ -1,0 +1,31 @@
+version: "3.9"
+ 
+services:
+  db:
+    image: postgres:17
+    container_name: kinoSystemDB-db
+    restart: always
+    environment:
+      POSTGRES_USER: myuser
+      POSTGRES_PASSWORD: mypassword
+      POSTGRES_DB: mydb
+    ports:
+      - "5432:5432"
+    volumes:
+      - db_data:/var/lib/postgresql/data
+ 
+  postgrest:
+    image: postgrest/postgrest:v13.0.4
+    container_name: kinoSystemDB-api
+    restart: always
+    depends_on:
+      - db
+    environment:
+      PGRST_DB_URI: postgres://myuser:mypassword@db:5432/mydb
+      PGRST_DB_SCHEMA: public
+      PGRST_DB_ANON_ROLE: myuser
+    ports:
+      - "3001:3000"
+ 
+volumes:
+  db_data:
