@@ -1,0 +1,1804 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CineMax | Dein Kinoerlebnis</title>
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bright-amber: #FDCD1F;
+            --amber-dark: #E5B800;
+            --amber-light: #FFE066;
+            --deep-brown: #1A0F0A;
+            --medium-brown: #3D2317;
+            --warm-brown: #5C3D2E;
+            --cream: #FFF8E7;
+            --soft-coral: #E85A4F;
+            --coral-light: #FF7B6B;
+            --ocean-blue: #3D7A8C;
+            --blue-light: #5BA4B8;
+            --forest-green: #2D5A47;
+            --green-light: #4A8B6F;
+            --plum: #7B4B7A;
+            --plum-light: #9B6B9A;
+            --text-primary: #1A0F0A;
+            --text-secondary: rgba(26, 15, 10, 0.7);
+            --text-muted: rgba(26, 15, 10, 0.5);
+            --glass-bg: rgba(255, 248, 231, 0.6);
+            --glass-border: rgba(255, 255, 255, 0.5);
+            --shadow-soft: 0 4px 20px rgba(26, 15, 10, 0.08);
+            --shadow-medium: 0 8px 40px rgba(26, 15, 10, 0.12);
+            --shadow-strong: 0 20px 60px rgba(26, 15, 10, 0.2);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+            font-size: 16px;
+        }
+
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background: var(--bright-amber);
+            color: var(--text-primary);
+            overflow-x: hidden;
+            min-height: 100vh;
+            line-height: 1.6;
+        }
+
+        /* Smooth page transitions */
+        .page-content {
+            opacity: 0;
+            animation: pageLoad 0.8s ease-out forwards;
+        }
+
+        @keyframes pageLoad {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Navigation */
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            padding: 1.25rem 4rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: transparent;
+            transform: translateY(-100%);
+            opacity: 0;
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .navbar.visible {
+            transform: translateY(0);
+            opacity: 1;
+            background: rgba(253, 205, 31, 0.95);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            box-shadow: 0 4px 30px rgba(26, 15, 10, 0.1);
+        }
+
+        .logo {
+            font-family: 'Bebas Neue', cursive;
+            font-size: 2.2rem;
+            color: var(--deep-brown);
+            letter-spacing: 4px;
+            position: relative;
+        }
+
+        .logo::after {
+            content: '';
+            position: absolute;
+            bottom: 2px;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: var(--soft-coral);
+            border-radius: 2px;
+            transform: scaleX(0);
+            transition: transform 0.3s ease;
+        }
+
+        .logo:hover::after {
+            transform: scaleX(1);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2.5rem;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: var(--text-primary);
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.95rem;
+            letter-spacing: 0.5px;
+            transition: all 0.3s ease;
+            position: relative;
+            padding: 8px 0;
+        }
+
+        .nav-links a::before {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            width: 0;
+            height: 2px;
+            background: var(--soft-coral);
+            transition: all 0.3s ease;
+            transform: translateX(-50%);
+            border-radius: 2px;
+        }
+
+        .nav-links a:hover {
+            color: var(--soft-coral);
+        }
+
+        .nav-links a:hover::before {
+            width: 100%;
+        }
+
+        .nav-auth {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .btn {
+            padding: 0.85rem 1.75rem;
+            border-radius: 50px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            text-decoration: none;
+            font-size: 0.9rem;
+            letter-spacing: 0.3px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .btn:hover::before {
+            left: 100%;
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 2px solid var(--deep-brown);
+            color: var(--deep-brown);
+        }
+
+        .btn-outline:hover {
+            background: var(--deep-brown);
+            color: var(--bright-amber);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(26, 15, 10, 0.2);
+        }
+
+        .btn-primary {
+            background: var(--deep-brown);
+            border: 2px solid var(--deep-brown);
+            color: var(--bright-amber);
+        }
+
+        .btn-primary:hover {
+            background: var(--soft-coral);
+            border-color: var(--soft-coral);
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(232, 90, 79, 0.3);
+        }
+
+        /* Hero Animation Section */
+        .hero {
+            height: 100vh;
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            background: linear-gradient(180deg, var(--bright-amber) 0%, var(--amber-light) 50%, var(--bright-amber) 100%);
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+            opacity: 0.025;
+            pointer-events: none;
+        }
+
+        /* Ambient light effects */
+        .ambient-light {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(80px);
+            opacity: 0.4;
+            pointer-events: none;
+            animation: float 8s ease-in-out infinite;
+        }
+
+        .ambient-light-1 {
+            width: 400px;
+            height: 400px;
+            background: var(--coral-light);
+            top: 10%;
+            left: 10%;
+            animation-delay: 0s;
+        }
+
+        .ambient-light-2 {
+            width: 300px;
+            height: 300px;
+            background: var(--blue-light);
+            bottom: 20%;
+            right: 15%;
+            animation-delay: -3s;
+        }
+
+        .ambient-light-3 {
+            width: 250px;
+            height: 250px;
+            background: var(--green-light);
+            top: 60%;
+            left: 5%;
+            animation-delay: -5s;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translate(0, 0) scale(1); }
+            25% { transform: translate(30px, -30px) scale(1.05); }
+            50% { transform: translate(-20px, 20px) scale(0.95); }
+            75% { transform: translate(20px, 30px) scale(1.02); }
+        }
+
+        /* Animation Container */
+        .animation-placeholder {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 10;
+        }
+
+        .popcorn-image-placeholder {
+            position: relative;
+            width: 420px;
+            height: 520px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            animation: dropBox 1.8s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+            transform: translateY(-150vh);
+        }
+
+        .placeholder-box {
+            width: 320px;
+            height: 420px;
+            border: 3px dashed var(--medium-brown);
+            border-radius: 24px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background: rgba(255,255,255,0.4);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            box-shadow: var(--shadow-medium);
+            transition: all 0.4s ease;
+        }
+
+        .placeholder-box:hover {
+            transform: scale(1.02);
+            box-shadow: var(--shadow-strong);
+            border-color: var(--soft-coral);
+        }
+
+        .placeholder-box-icon {
+            font-size: 5rem;
+            margin-bottom: 20px;
+            animation: wiggle 2s ease-in-out infinite;
+        }
+
+        @keyframes wiggle {
+            0%, 100% { transform: rotate(-5deg); }
+            50% { transform: rotate(5deg); }
+        }
+
+        .placeholder-box-text {
+            font-family: 'Bebas Neue', cursive;
+            font-size: 1.6rem;
+            color: var(--deep-brown);
+            letter-spacing: 3px;
+            text-align: center;
+        }
+
+        .placeholder-box-sub {
+            font-size: 0.95rem;
+            color: var(--text-secondary);
+            margin-top: 12px;
+            font-weight: 500;
+        }
+
+        @keyframes dropBox {
+            0% { transform: translateY(-150vh) rotate(-20deg); opacity: 0; }
+            50% { opacity: 1; }
+            70% { transform: translateY(20px) rotate(8deg); }
+            85% { transform: translateY(-15px) rotate(-4deg); }
+            100% { transform: translateY(0) rotate(0deg); }
+        }
+
+        /* Popcorn pieces with improved physics */
+        .popcorn {
+            position: absolute;
+            width: 28px;
+            height: 28px;
+            background: radial-gradient(ellipse at 25% 25%, #fff 0%, #FFF8E7 40%, #F0E0C0 80%, #E5D0A0 100%);
+            border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+            box-shadow: 
+                inset -4px -4px 8px rgba(0,0,0,0.08),
+                inset 2px 2px 4px rgba(255,255,255,0.8),
+                2px 4px 12px rgba(0,0,0,0.12);
+            opacity: 0;
+            z-index: 5;
+        }
+
+        .popcorn:nth-child(odd) {
+            width: 24px;
+            height: 24px;
+        }
+
+        .popcorn:nth-child(3n) {
+            width: 32px;
+            height: 32px;
+        }
+
+        .popcorn:nth-child(1) { animation: popOut1 1.2s 1.5s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards; }
+        .popcorn:nth-child(2) { animation: popOut2 1.3s 1.55s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards; }
+        .popcorn:nth-child(3) { animation: popOut3 1.1s 1.6s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards; }
+        .popcorn:nth-child(4) { animation: popOut4 1.4s 1.65s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards; }
+        .popcorn:nth-child(5) { animation: popOut5 1.2s 1.7s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards; }
+        .popcorn:nth-child(6) { animation: popOut6 1.35s 1.75s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards; }
+        .popcorn:nth-child(7) { animation: popOut7 1.15s 1.8s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards; }
+        .popcorn:nth-child(8) { animation: popOut8 1.3s 1.85s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards; }
+        .popcorn:nth-child(9) { animation: popOut9 1.25s 1.9s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards; }
+        .popcorn:nth-child(10) { animation: popOut10 1.2s 1.95s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards; }
+        .popcorn:nth-child(11) { animation: popOut11 1.4s 2s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards; }
+        .popcorn:nth-child(12) { animation: popOut12 1.1s 2.05s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards; }
+        .popcorn:nth-child(13) { animation: popOut13 1.3s 2.1s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards; }
+        .popcorn:nth-child(14) { animation: popOut14 1.2s 2.15s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards; }
+        .popcorn:nth-child(15) { animation: popOut15 1.35s 2.2s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards; }
+        .popcorn:nth-child(16) { animation: popOut16 1.15s 2.25s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards; }
+        .popcorn:nth-child(17) { animation: popOut17 1.3s 2.3s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards; }
+        .popcorn:nth-child(18) { animation: popOut18 1.2s 2.35s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards; }
+        .popcorn:nth-child(19) { animation: popOut19 1.4s 2.4s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards; }
+        .popcorn:nth-child(20) { animation: popOut20 1.1s 2.45s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards; }
+        .popcorn:nth-child(21) { animation: popOut21 1.25s 2.5s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards; }
+        .popcorn:nth-child(22) { animation: popOut22 1.3s 2.55s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards; }
+        .popcorn:nth-child(23) { animation: popOut23 1.15s 2.6s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards; }
+        .popcorn:nth-child(24) { animation: popOut24 1.35s 2.65s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards; }
+        .popcorn:nth-child(25) { animation: popOut25 1.2s 2.7s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards; }
+
+        @keyframes popOut1 { 0% { opacity: 0; transform: translate(0, 0) rotate(0deg) scale(0); } 30% { opacity: 1; transform: scale(1.2); } 100% { opacity: 1; transform: translate(-280px, -250px) rotate(720deg) scale(1); } }
+        @keyframes popOut2 { 0% { opacity: 0; transform: translate(0, 0) rotate(0deg) scale(0); } 30% { opacity: 1; transform: scale(1.2); } 100% { opacity: 1; transform: translate(260px, -280px) rotate(-540deg) scale(1); } }
+        @keyframes popOut3 { 0% { opacity: 0; transform: translate(0, 0) rotate(0deg) scale(0); } 30% { opacity: 1; transform: scale(1.2); } 100% { opacity: 1; transform: translate(-200px, -340px) rotate(450deg) scale(1); } }
+        @keyframes popOut4 { 0% { opacity: 0; transform: translate(0, 0) rotate(0deg) scale(0); } 30% { opacity: 1; transform: scale(1.2); } 100% { opacity: 1; transform: translate(320px, -200px) rotate(-630deg) scale(1); } }
+        @keyframes popOut5 { 0% { opacity: 0; transform: translate(0, 0) rotate(0deg) scale(0); } 30% { opacity: 1; transform: scale(1.2); } 100% { opacity: 1; transform: translate(-380px, -140px) rotate(360deg) scale(1); } }
+        @keyframes popOut6 { 0% { opacity: 0; transform: translate(0, 0) rotate(0deg) scale(0); } 30% { opacity: 1; transform: scale(1.2); } 100% { opacity: 1; transform: translate(360px, -320px) rotate(-450deg) scale(1); } }
+        @keyframes popOut7 { 0% { opacity: 0; transform: translate(0, 0) rotate(0deg) scale(0); } 30% { opacity: 1; transform: scale(1.2); } 100% { opacity: 1; transform: translate(-140px, -380px) rotate(540deg) scale(1); } }
+        @keyframes popOut8 { 0% { opacity: 0; transform: translate(0, 0) rotate(0deg) scale(0); } 30% { opacity: 1; transform: scale(1.2); } 100% { opacity: 1; transform: translate(420px, -120px) rotate(-720deg) scale(1); } }
+        @keyframes popOut9 { 0% { opacity: 0; transform: translate(0, 0) rotate(0deg) scale(0); } 30% { opacity: 1; transform: scale(1.2); } 100% { opacity: 1; transform: translate(-440px, -280px) rotate(630deg) scale(1); } }
+        @keyframes popOut10 { 0% { opacity: 0; transform: translate(0, 0) rotate(0deg) scale(0); } 30% { opacity: 1; transform: scale(1.2); } 100% { opacity: 1; transform: translate(200px, -360px) rotate(-360deg) scale(1); } }
+        @keyframes popOut11 { 0% { opacity: 0; transform: translate(0, 0) rotate(0deg) scale(0); } 30% { opacity: 1; transform: scale(1.2); } 100% { opacity: 1; transform: translate(-360px, -80px) rotate(450deg) scale(1); } }
+        @keyframes popOut12 { 0% { opacity: 0; transform: translate(0, 0) rotate(0deg) scale(0); } 30% { opacity: 1; transform: scale(1.2); } 100% { opacity: 1; transform: translate(400px, -360px) rotate(-540deg) scale(1); } }
+        @keyframes popOut13 { 0% { opacity: 0; transform: translate(0, 0) rotate(0deg) scale(0); } 30% { opacity: 1; transform: scale(1.2); } 100% { opacity: 1; transform: translate(-260px, -420px) rotate(720deg) scale(1); } }
+        @keyframes popOut14 { 0% { opacity: 0; transform: translate(0, 0) rotate(0deg) scale(0); } 30% { opacity: 1; transform: scale(1.2); } 100% { opacity: 1; transform: translate(140px, -440px) rotate(-450deg) scale(1); } }
+        @keyframes popOut15 { 0% { opacity: 0; transform: translate(0, 0) rotate(0deg) scale(0); } 30% { opacity: 1; transform: scale(1.2); } 100% { opacity: 1; transform: translate(-500px, -200px) rotate(540deg) scale(1); } }
+        @keyframes popOut16 { 0% { opacity: 0; transform: translate(0, 0) rotate(0deg) scale(0); } 30% { opacity: 1; transform: scale(1.2); } 100% { opacity: 1; transform: translate(500px, -260px) rotate(-630deg) scale(1); } }
+        @keyframes popOut17 { 0% { opacity: 0; transform: translate(0, 0) rotate(0deg) scale(0); } 30% { opacity: 1; transform: scale(1.2); } 100% { opacity: 1; transform: translate(-80px, -460px) rotate(360deg) scale(1); } }
+        @keyframes popOut18 { 0% { opacity: 0; transform: translate(0, 0) rotate(0deg) scale(0); } 30% { opacity: 1; transform: scale(1.2); } 100% { opacity: 1; transform: translate(80px, -140px) rotate(-720deg) scale(1); } }
+        @keyframes popOut19 { 0% { opacity: 0; transform: translate(0, 0) rotate(0deg) scale(0); } 30% { opacity: 1; transform: scale(1.2); } 100% { opacity: 1; transform: translate(-540px, -380px) rotate(450deg) scale(1); } }
+        @keyframes popOut20 { 0% { opacity: 0; transform: translate(0, 0) rotate(0deg) scale(0); } 30% { opacity: 1; transform: scale(1.2); } 100% { opacity: 1; transform: translate(540px, -400px) rotate(-540deg) scale(1); } }
+        @keyframes popOut21 { 0% { opacity: 0; transform: translate(0, 0) rotate(0deg) scale(0); } 30% { opacity: 1; transform: scale(1.2); } 100% { opacity: 1; transform: translate(-180px, -180px) rotate(630deg) scale(1); } }
+        @keyframes popOut22 { 0% { opacity: 0; transform: translate(0, 0) rotate(0deg) scale(0); } 30% { opacity: 1; transform: scale(1.2); } 100% { opacity: 1; transform: translate(180px, -220px) rotate(-360deg) scale(1); } }
+        @keyframes popOut23 { 0% { opacity: 0; transform: translate(0, 0) rotate(0deg) scale(0); } 30% { opacity: 1; transform: scale(1.2); } 100% { opacity: 1; transform: translate(-420px, -320px) rotate(720deg) scale(1); } }
+        @keyframes popOut24 { 0% { opacity: 0; transform: translate(0, 0) rotate(0deg) scale(0); } 30% { opacity: 1; transform: scale(1.2); } 100% { opacity: 1; transform: translate(300px, -100px) rotate(-450deg) scale(1); } }
+        @keyframes popOut25 { 0% { opacity: 0; transform: translate(0, 0) rotate(0deg) scale(0); } 30% { opacity: 1; transform: scale(1.2); } 100% { opacity: 1; transform: translate(-300px, -400px) rotate(540deg) scale(1); } }
+
+        /* Tickets with improved design */
+        .ticket {
+            position: absolute;
+            width: 190px;
+            height: 80px;
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Bebas Neue', cursive;
+            font-size: 1.5rem;
+            letter-spacing: 3px;
+            cursor: pointer;
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            opacity: 0;
+            text-decoration: none;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.2);
+            overflow: hidden;
+            z-index: 20;
+        }
+
+        .ticket::before {
+            content: '';
+            position: absolute;
+            left: -14px;
+            width: 28px;
+            height: 28px;
+            background: var(--bright-amber);
+            border-radius: 50%;
+            box-shadow: inset 2px 0 8px rgba(0,0,0,0.1);
+        }
+
+        .ticket::after {
+            content: '';
+            position: absolute;
+            right: -14px;
+            width: 28px;
+            height: 28px;
+            background: var(--bright-amber);
+            border-radius: 50%;
+            box-shadow: inset -2px 0 8px rgba(0,0,0,0.1);
+        }
+
+        .ticket-shine {
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+            transition: left 0.6s ease;
+        }
+
+        .ticket:hover .ticket-shine {
+            left: 100%;
+        }
+
+        .ticket:hover {
+            transform: scale(1.12) rotate(0deg) translateY(-5px) !important;
+            box-shadow: 0 30px 70px rgba(0,0,0,0.3);
+        }
+
+        .ticket-1 {
+            background: linear-gradient(135deg, var(--soft-coral) 0%, #d14a40 100%);
+            color: white;
+            animation: ticketFall1 1.2s 3s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+        }
+
+        .ticket-2 {
+            background: linear-gradient(135deg, var(--ocean-blue) 0%, #2d6a7c 100%);
+            color: white;
+            animation: ticketFall2 1.3s 3.2s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+        }
+
+        .ticket-3 {
+            background: linear-gradient(135deg, var(--forest-green) 0%, #1d4a37 100%);
+            color: white;
+            animation: ticketFall3 1.2s 3.4s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+        }
+
+        .ticket-4 {
+            background: linear-gradient(135deg, var(--plum) 0%, #5b3b5a 100%);
+            color: white;
+            animation: ticketFall4 1.3s 3.6s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+        }
+
+        @keyframes ticketFall1 { 
+            0% { opacity: 0; transform: translate(0, -150px) rotate(-40deg) scale(0.5); } 
+            60% { opacity: 1; transform: translate(-320px, 240px) rotate(-8deg) scale(1.05); }
+            100% { opacity: 1; transform: translate(-320px, 240px) rotate(-10deg) scale(1); } 
+        }
+        @keyframes ticketFall2 { 
+            0% { opacity: 0; transform: translate(0, -150px) rotate(35deg) scale(0.5); } 
+            60% { opacity: 1; transform: translate(320px, 220px) rotate(12deg) scale(1.05); }
+            100% { opacity: 1; transform: translate(320px, 220px) rotate(8deg) scale(1); } 
+        }
+        @keyframes ticketFall3 { 
+            0% { opacity: 0; transform: translate(0, -150px) rotate(-25deg) scale(0.5); } 
+            60% { opacity: 1; transform: translate(-350px, 380px) rotate(-3deg) scale(1.05); }
+            100% { opacity: 1; transform: translate(-350px, 380px) rotate(-5deg) scale(1); } 
+        }
+        @keyframes ticketFall4 { 
+            0% { opacity: 0; transform: translate(0, -150px) rotate(30deg) scale(0.5); } 
+            60% { opacity: 1; transform: translate(350px, 360px) rotate(15deg) scale(1.05); }
+            100% { opacity: 1; transform: translate(350px, 360px) rotate(12deg) scale(1); } 
+        }
+
+        .ticket-icon {
+            margin-right: 12px;
+            font-size: 1.8rem;
+        }
+
+        /* Scroll indicator */
+        .scroll-indicator {
+            position: absolute;
+            bottom: 50px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 12px;
+            opacity: 0;
+            animation: fadeInUp 1s 4.5s forwards;
+            z-index: 30;
+        }
+
+        @keyframes fadeInUp { 
+            from { opacity: 0; transform: translateX(-50%) translateY(20px); }
+            to { opacity: 1; transform: translateX(-50%) translateY(0); }
+        }
+
+        .scroll-indicator span {
+            font-size: 0.85rem;
+            color: var(--text-primary);
+            letter-spacing: 3px;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+
+        .scroll-arrow {
+            width: 28px;
+            height: 28px;
+            border-right: 3px solid var(--deep-brown);
+            border-bottom: 3px solid var(--deep-brown);
+            transform: rotate(45deg);
+            animation: bounce 2.5s ease-in-out infinite;
+        }
+
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% { transform: rotate(45deg) translateY(0); }
+            40% { transform: rotate(45deg) translateY(12px); }
+            60% { transform: rotate(45deg) translateY(6px); }
+        }
+
+        /* Content Section */
+        .content {
+            background: var(--bright-amber);
+            position: relative;
+            padding: 80px 0;
+        }
+
+        .glass-container {
+            max-width: 1440px;
+            margin: 0 auto 60px;
+            padding: 50px;
+            background: linear-gradient(135deg, rgba(255, 248, 231, 0.7) 0%, rgba(255, 248, 231, 0.5) 100%);
+            backdrop-filter: blur(40px);
+            -webkit-backdrop-filter: blur(40px);
+            border-radius: 40px;
+            box-shadow: 
+                var(--shadow-strong),
+                inset 0 1px 2px rgba(255,255,255,0.6);
+            border: 1px solid rgba(255,255,255,0.4);
+        }
+
+        /* Header */
+        .content-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 40px;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .content-logo {
+            font-family: 'Bebas Neue', cursive;
+            font-size: 2.4rem;
+            color: var(--deep-brown);
+            letter-spacing: 3px;
+        }
+
+        .content-nav {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            background: rgba(26, 15, 10, 0.75);
+            padding: 8px 10px;
+            border-radius: 35px;
+            box-shadow: var(--shadow-medium);
+        }
+
+        .content-nav-item {
+            padding: 12px 24px;
+            color: rgba(255,255,255,0.75);
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.95rem;
+            border-radius: 25px;
+            transition: all 0.35s ease;
+            letter-spacing: 0.3px;
+        }
+
+        .content-nav-item.active,
+        .content-nav-item:hover {
+            background: var(--bright-amber);
+            color: var(--deep-brown);
+            box-shadow: 0 4px 15px rgba(253, 205, 31, 0.4);
+        }
+
+        .search-icon {
+            width: 44px;
+            height: 44px;
+            background: var(--deep-brown);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            margin-left: 6px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 1.1rem;
+        }
+
+        .search-icon:hover {
+            background: var(--soft-coral);
+            transform: scale(1.08);
+        }
+
+        .user-profile {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .notification-bell {
+            position: relative;
+            cursor: pointer;
+            font-size: 1.4rem;
+            transition: transform 0.3s ease;
+        }
+
+        .notification-bell:hover {
+            transform: scale(1.15) rotate(15deg);
+        }
+
+        .notification-badge {
+            position: absolute;
+            top: -6px;
+            right: -6px;
+            width: 20px;
+            height: 20px;
+            background: var(--soft-coral);
+            border-radius: 50%;
+            font-size: 0.7rem;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            box-shadow: 0 2px 8px rgba(232, 90, 79, 0.4);
+        }
+
+        .user-avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--soft-coral), var(--ocean-blue));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 700;
+            font-size: 1.1rem;
+            box-shadow: var(--shadow-soft);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .user-avatar:hover {
+            transform: scale(1.08);
+            box-shadow: var(--shadow-medium);
+        }
+
+        .user-info {
+            line-height: 1.3;
+        }
+
+        .user-name {
+            font-weight: 700;
+            color: var(--text-primary);
+            font-size: 1rem;
+        }
+
+        .user-tier {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
+
+        /* Featured Movies */
+        .featured-movies {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 50px;
+        }
+
+        .featured-card {
+            position: relative;
+            height: 300px;
+            border-radius: 28px;
+            overflow: hidden;
+            cursor: pointer;
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: var(--shadow-medium);
+        }
+
+        .featured-card:hover {
+            transform: translateY(-8px) scale(1.01);
+            box-shadow: var(--shadow-strong);
+        }
+
+        .featured-placeholder {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            font-size: 5rem;
+            transition: transform 0.6s ease;
+        }
+
+        .featured-card:hover .featured-placeholder {
+            transform: scale(1.08);
+        }
+
+        .featured-card:nth-child(1) .featured-placeholder {
+            background: linear-gradient(135deg, #4A6FA5 0%, #2D4A6F 50%, #1A2D45 100%);
+        }
+
+        .featured-card:nth-child(2) .featured-placeholder {
+            background: linear-gradient(135deg, #7BA4C7 0%, #5A8AAF 50%, #3D6A8F 100%);
+        }
+
+        .featured-content {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            top: 0;
+            padding: 35px;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            background: linear-gradient(180deg, transparent 20%, rgba(0,0,0,0.75) 100%);
+        }
+
+        .featured-badge {
+            position: absolute;
+            top: 25px;
+            right: 25px;
+            background: rgba(255,255,255,0.2);
+            backdrop-filter: blur(10px);
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: white;
+            letter-spacing: 0.5px;
+        }
+
+        .featured-title {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            font-size: 2rem;
+            font-weight: 800;
+            color: white;
+            line-height: 1.2;
+            margin-bottom: 18px;
+            max-width: 70%;
+            text-shadow: 0 2px 10px rgba(0,0,0,0.3);
+        }
+
+        .featured-meta {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 18px;
+        }
+
+        .featured-tag {
+            background: rgba(255,255,255,0.15);
+            padding: 6px 14px;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            color: rgba(255,255,255,0.9);
+            font-weight: 500;
+        }
+
+        .play-button {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            background: rgba(255,255,255,0.2);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            padding: 14px 24px;
+            border-radius: 35px;
+            color: white;
+            font-weight: 600;
+            width: fit-content;
+            transition: all 0.4s ease;
+            font-size: 0.95rem;
+            letter-spacing: 0.3px;
+        }
+
+        .play-button:hover {
+            background: rgba(255,255,255,0.35);
+            transform: translateX(5px);
+        }
+
+        .play-icon {
+            width: 36px;
+            height: 36px;
+            background: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--deep-brown);
+            font-size: 0.9rem;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+
+        /* Category Pills */
+        .category-pills {
+            display: flex;
+            gap: 14px;
+            margin-bottom: 50px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .category-pill {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 14px 26px;
+            background: rgba(255,255,255,0.65);
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            text-decoration: none;
+            color: var(--text-primary);
+            font-weight: 600;
+            font-size: 0.95rem;
+            border: 2px solid transparent;
+            box-shadow: var(--shadow-soft);
+        }
+
+        .category-pill:hover {
+            background: rgba(255,255,255,0.9);
+            transform: translateY(-3px);
+            box-shadow: var(--shadow-medium);
+            border-color: var(--bright-amber);
+        }
+
+        .category-pill.active {
+            background: var(--deep-brown);
+            color: white;
+            box-shadow: 0 8px 30px rgba(26, 15, 10, 0.25);
+        }
+
+        .category-icon {
+            font-size: 1.3rem;
+        }
+
+        /* Section Header */
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+
+        .section-title {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            font-size: 1.6rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            letter-spacing: -0.3px;
+        }
+
+        .section-controls {
+            display: flex;
+            gap: 12px;
+        }
+
+        .control-btn {
+            width: 44px;
+            height: 44px;
+            background: var(--deep-brown);
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            cursor: pointer;
+            transition: all 0.35s ease;
+            font-size: 1.1rem;
+        }
+
+        .control-btn:hover {
+            background: var(--soft-coral);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(232, 90, 79, 0.3);
+        }
+
+        /* Movie Scroll */
+        .movie-scroll {
+            display: flex;
+            gap: 24px;
+            overflow-x: auto;
+            padding: 15px 5px 40px;
+            scrollbar-width: none;
+            scroll-behavior: smooth;
+        }
+
+        .movie-scroll::-webkit-scrollbar {
+            display: none;
+        }
+
+        .movie-card {
+            flex: 0 0 190px;
+            cursor: pointer;
+            transition: all 0.45s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .movie-card:hover {
+            transform: translateY(-12px);
+        }
+
+        .movie-poster {
+            width: 100%;
+            aspect-ratio: 2/3;
+            border-radius: 22px;
+            overflow: hidden;
+            margin-bottom: 14px;
+            box-shadow: var(--shadow-medium);
+            position: relative;
+            transition: all 0.4s ease;
+        }
+
+        .movie-card:hover .movie-poster {
+            box-shadow: var(--shadow-strong);
+        }
+
+        .movie-placeholder {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            font-size: 3.5rem;
+            transition: transform 0.5s ease;
+        }
+
+        .movie-card:hover .movie-placeholder {
+            transform: scale(1.08);
+        }
+
+        .movie-card:nth-child(1) .movie-placeholder { background: linear-gradient(160deg, #8B5A2B 0%, #654321 50%, #3D2817 100%); }
+        .movie-card:nth-child(2) .movie-placeholder { background: linear-gradient(160deg, #708090 0%, #4a5a6a 50%, #2a3a4a 100%); }
+        .movie-card:nth-child(3) .movie-placeholder { background: linear-gradient(160deg, #DEB887 0%, #C4A574 50%, #A48554 100%); }
+        .movie-card:nth-child(4) .movie-placeholder { background: linear-gradient(160deg, #FFB6C1 0%, #E8A0A8 50%, #C88090 100%); }
+        .movie-card:nth-child(5) .movie-placeholder { background: linear-gradient(160deg, #98D8C8 0%, #7BC4B4 50%, #5AA494 100%); }
+        .movie-card:nth-child(6) .movie-placeholder { background: linear-gradient(160deg, #DDA0DD 0%, #C890C8 50%, #A870A8 100%); }
+        .movie-card:nth-child(7) .movie-placeholder { background: linear-gradient(160deg, #87CEEB 0%, #6AB4D1 50%, #4A94B1 100%); }
+        .movie-card:nth-child(8) .movie-placeholder { background: linear-gradient(160deg, #F0E68C 0%, #D6CC72 50%, #B6AC52 100%); }
+
+        .movie-overlay {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            padding: 20px 15px;
+            background: linear-gradient(transparent, rgba(0,0,0,0.85));
+            opacity: 0;
+            transform: translateY(10px);
+            transition: all 0.4s ease;
+        }
+
+        .movie-card:hover .movie-overlay {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .movie-overlay-btn {
+            width: 100%;
+            padding: 10px;
+            background: white;
+            border: none;
+            border-radius: 12px;
+            font-weight: 700;
+            font-size: 0.85rem;
+            color: var(--deep-brown);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .movie-overlay-btn:hover {
+            background: var(--bright-amber);
+        }
+
+        .movie-info {
+            padding: 0 8px;
+        }
+
+        .movie-title {
+            font-weight: 700;
+            font-size: 1rem;
+            color: var(--text-primary);
+            margin-bottom: 6px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            letter-spacing: -0.2px;
+        }
+
+        .movie-meta {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 0.88rem;
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
+
+        .movie-rating {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            color: #E5A000;
+            font-weight: 600;
+        }
+
+        /* Coming Soon Section */
+        .coming-soon-section {
+            margin-top: 60px;
+        }
+
+        .coming-soon-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 25px;
+        }
+
+        .coming-soon-card {
+            position: relative;
+            aspect-ratio: 16/9;
+            border-radius: 20px;
+            overflow: hidden;
+            cursor: pointer;
+            transition: all 0.45s ease;
+            box-shadow: var(--shadow-medium);
+        }
+
+        .coming-soon-card:hover {
+            transform: translateY(-8px);
+            box-shadow: var(--shadow-strong);
+        }
+
+        .coming-soon-placeholder {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.5rem;
+        }
+
+        .coming-soon-card:nth-child(1) .coming-soon-placeholder { background: linear-gradient(135deg, #FF6B6B, #EE5A5A); }
+        .coming-soon-card:nth-child(2) .coming-soon-placeholder { background: linear-gradient(135deg, #4ECDC4, #3DBDB4); }
+        .coming-soon-card:nth-child(3) .coming-soon-placeholder { background: linear-gradient(135deg, #A78BFA, #9775EA); }
+        .coming-soon-card:nth-child(4) .coming-soon-placeholder { background: linear-gradient(135deg, #FBBF24, #EAA914); }
+
+        .coming-soon-content {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            padding: 20px;
+            background: linear-gradient(transparent, rgba(0,0,0,0.85));
+        }
+
+        .coming-soon-date {
+            display: inline-block;
+            background: var(--soft-coral);
+            padding: 5px 12px;
+            border-radius: 15px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            color: white;
+            margin-bottom: 8px;
+        }
+
+        .coming-soon-title {
+            font-weight: 700;
+            font-size: 1.05rem;
+            color: white;
+        }
+
+        /* Footer */
+        footer {
+            background: var(--deep-brown);
+            padding: 100px 5% 50px;
+            color: var(--cream);
+        }
+
+        .footer-content {
+            max-width: 1440px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 2.5fr 1fr 1fr 1fr;
+            gap: 80px;
+        }
+
+        .footer-brand .logo {
+            color: var(--bright-amber);
+            margin-bottom: 25px;
+            display: inline-block;
+        }
+
+        .footer-brand p {
+            color: rgba(255, 248, 231, 0.7);
+            line-height: 1.9;
+            font-size: 1rem;
+            max-width: 350px;
+        }
+
+        .footer-section h4 {
+            font-family: 'Bebas Neue', cursive;
+            font-size: 1.6rem;
+            letter-spacing: 2px;
+            margin-bottom: 30px;
+            color: var(--bright-amber);
+        }
+
+        .footer-section ul {
+            list-style: none;
+        }
+
+        .footer-section li {
+            margin-bottom: 16px;
+        }
+
+        .footer-section a {
+            color: rgba(255, 248, 231, 0.7);
+            text-decoration: none;
+            transition: all 0.35s ease;
+            font-size: 1rem;
+            display: inline-block;
+        }
+
+        .footer-section a:hover {
+            color: var(--bright-amber);
+            transform: translateX(8px);
+        }
+
+        .footer-social {
+            display: flex;
+            gap: 16px;
+            margin-top: 35px;
+        }
+
+        .social-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: rgba(255, 248, 231, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.3rem;
+            transition: all 0.4s ease;
+            cursor: pointer;
+            border: 1px solid rgba(255, 248, 231, 0.15);
+        }
+
+        .social-icon:hover {
+            background: var(--bright-amber);
+            color: var(--deep-brown);
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(253, 205, 31, 0.3);
+        }
+
+        .footer-bottom {
+            max-width: 1440px;
+            margin: 80px auto 0;
+            padding-top: 35px;
+            border-top: 1px solid rgba(255, 248, 231, 0.15);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.95rem;
+            color: rgba(255, 248, 231, 0.6);
+        }
+
+        .footer-bottom a {
+            color: var(--bright-amber);
+            text-decoration: none;
+        }
+
+        /* Responsive */
+        @media (max-width: 1200px) {
+            .coming-soon-grid { grid-template-columns: repeat(2, 1fr); }
+        }
+
+        @media (max-width: 1024px) {
+            .footer-content { grid-template-columns: 1fr 1fr; gap: 50px; }
+            .featured-movies { grid-template-columns: 1fr; }
+            .featured-card { height: 260px; }
+            .glass-container { margin: 0 20px; padding: 35px; }
+        }
+
+        @media (max-width: 768px) {
+            .navbar { padding: 1rem 1.5rem; }
+            .nav-links { display: none; }
+            .glass-container { padding: 25px; border-radius: 28px; margin: 0 15px; }
+            .content-header { flex-direction: column; align-items: flex-start; }
+            .content-nav { display: none; }
+            .featured-card { height: 220px; }
+            .featured-title { font-size: 1.5rem; max-width: 85%; }
+            .category-pills { gap: 10px; }
+            .category-pill { padding: 12px 20px; font-size: 0.88rem; }
+            .section-title { font-size: 1.35rem; }
+            .movie-card { flex: 0 0 160px; }
+            .coming-soon-grid { grid-template-columns: 1fr; }
+            .popcorn-image-placeholder { width: 300px; height: 380px; }
+            .placeholder-box { width: 240px; height: 320px; }
+            .ticket { width: 150px; height: 65px; font-size: 1.2rem; }
+            @keyframes ticketFall1 { 0% { opacity: 0; transform: translate(0, -150px) rotate(-40deg) scale(0.5); } 100% { opacity: 1; transform: translate(-150px, 210px) rotate(-10deg) scale(1); } }
+            @keyframes ticketFall2 { 0% { opacity: 0; transform: translate(0, -150px) rotate(35deg) scale(0.5); } 100% { opacity: 1; transform: translate(150px, 190px) rotate(8deg) scale(1); } }
+            @keyframes ticketFall3 { 0% { opacity: 0; transform: translate(0, -150px) rotate(-25deg) scale(0.5); } 100% { opacity: 1; transform: translate(-160px, 330px) rotate(-5deg) scale(1); } }
+            @keyframes ticketFall4 { 0% { opacity: 0; transform: translate(0, -150px) rotate(30deg) scale(0.5); } 100% { opacity: 1; transform: translate(160px, 310px) rotate(12deg) scale(1); } }
+            .footer-content { grid-template-columns: 1fr; gap: 40px; text-align: center; }
+            .footer-brand p { max-width: 100%; }
+            .footer-social { justify-content: center; }
+            .footer-bottom { flex-direction: column; gap: 20px; text-align: center; }
+        }
+
+        /* Scroll animations */
+        .animate-on-scroll {
+            opacity: 0;
+            transform: translateY(40px);
+            transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .animate-on-scroll.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .animate-delay-1 { transition-delay: 0.1s; }
+        .animate-delay-2 { transition-delay: 0.2s; }
+        .animate-delay-3 { transition-delay: 0.3s; }
+        .animate-delay-4 { transition-delay: 0.4s; }
+    </style>
+</head>
+<body>
+    <div class="page-content">
+        <!-- Navigation -->
+        <nav class="navbar" id="navbar">
+            <div class="logo">CINEMAX</div>
+            <ul class="nav-links">
+                <li><a href="#filme">Filme</a></li>
+                <li><a href="#programm">Programm</a></li>
+                <li><a href="#preise">Preise</a></li>
+                <li><a href="#events">Events</a></li>
+            </ul>
+            <div class="nav-auth">
+                <a href="#anmelden" class="btn btn-outline">Anmelden</a>
+                <a href="#registrieren" class="btn btn-primary">Registrieren</a>
+            </div>
+        </nav>
+
+        <!-- Hero Section -->
+        <section class="hero">
+            <!-- Ambient lights -->
+            <div class="ambient-light ambient-light-1"></div>
+            <div class="ambient-light ambient-light-2"></div>
+            <div class="ambient-light ambient-light-3"></div>
+
+            <!-- Popcorn pieces -->
+            <div class="popcorn"></div>
+            <div class="popcorn"></div>
+            <div class="popcorn"></div>
+            <div class="popcorn"></div>
+            <div class="popcorn"></div>
+            <div class="popcorn"></div>
+            <div class="popcorn"></div>
+            <div class="popcorn"></div>
+            <div class="popcorn"></div>
+            <div class="popcorn"></div>
+            <div class="popcorn"></div>
+            <div class="popcorn"></div>
+            <div class="popcorn"></div>
+            <div class="popcorn"></div>
+            <div class="popcorn"></div>
+            <div class="popcorn"></div>
+            <div class="popcorn"></div>
+            <div class="popcorn"></div>
+            <div class="popcorn"></div>
+            <div class="popcorn"></div>
+            <div class="popcorn"></div>
+            <div class="popcorn"></div>
+            <div class="popcorn"></div>
+            <div class="popcorn"></div>
+            <div class="popcorn"></div>
+
+            <!-- Animation Placeholder -->
+            <div class="animation-placeholder">
+                <div class="popcorn-image-placeholder">
+                    <div class="placeholder-box">
+                        <span class="placeholder-box-icon">🍿</span>
+                        <span class="placeholder-box-text">POPCORN BILD</span>
+                        <span class="placeholder-box-sub">Hier dein Bild einfügen</span>
+                    </div>
+
+                    <!-- Tickets -->
+                    <a href="#filme" class="ticket ticket-1">
+                        <span class="ticket-shine"></span>
+                        <span class="ticket-icon">🎬</span>
+                        FILME
+                    </a>
+                    <a href="#preise" class="ticket ticket-2">
+                        <span class="ticket-shine"></span>
+                        <span class="ticket-icon">💰</span>
+                        PREISE
+                    </a>
+                    <a href="#buchung" class="ticket ticket-3">
+                        <span class="ticket-shine"></span>
+                        <span class="ticket-icon">🎫</span>
+                        BUCHUNG
+                    </a>
+                    <a href="#registrieren" class="ticket ticket-4">
+                        <span class="ticket-shine"></span>
+                        <span class="ticket-icon">👤</span>
+                        KONTO
+                    </a>
+                </div>
+            </div>
+
+            <div class="scroll-indicator">
+                <span>Entdecken</span>
+                <div class="scroll-arrow"></div>
+            </div>
+        </section>
+
+        <!-- Content Section -->
+        <div class="content">
+            <div class="glass-container">
+                <!-- Header -->
+                <div class="content-header animate-on-scroll">
+                    <div class="content-logo">CineMax</div>
+                    
+                    <div class="content-nav">
+                        <a href="#" class="content-nav-item active">Film</a>
+                        <a href="#" class="content-nav-item">Serien</a>
+                        <a href="#" class="content-nav-item">Originals</a>
+                        <div class="search-icon">🔍</div>
+                    </div>
+
+                    <div class="user-profile">
+                        <div class="notification-bell">
+                            🔔
+                            <span class="notification-badge">3</span>
+                        </div>
+                        <div class="user-avatar">SJ</div>
+                        <div class="user-info">
+                            <div class="user-name">Sarah J</div>
+                            <div class="user-tier">Premium ✨</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Featured Movies -->
+                <div class="featured-movies animate-on-scroll animate-delay-1" id="filme">
+                    <div class="featured-card">
+                        <div class="featured-placeholder">🗡️</div>
+                        <div class="featured-content">
+                            <span class="featured-badge">⭐ 8.5 • Neu</span>
+                            <h2 class="featured-title">The Adventure of Blue Sword</h2>
+                            <div class="featured-meta">
+                                <span class="featured-tag">Action</span>
+                                <span class="featured-tag">2024</span>
+                                <span class="featured-tag">2h 15m</span>
+                            </div>
+                            <div class="play-button">
+                                <div class="play-icon">▶</div>
+                                <span>Jetzt abspielen</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="featured-card">
+                        <div class="featured-placeholder">🎭</div>
+                        <div class="featured-content">
+                            <span class="featured-badge">⭐ 7.9 • Beliebt</span>
+                            <h2 class="featured-title">Die Reise von Dol – Eine aufregende Geschichte</h2>
+                            <div class="featured-meta">
+                                <span class="featured-tag">Animation</span>
+                                <span class="featured-tag">2024</span>
+                                <span class="featured-tag">1h 52m</span>
+                            </div>
+                            <div class="play-button">
+                                <div class="play-icon">▶</div>
+                                <span>Jetzt abspielen</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Category Pills -->
+                <div class="category-pills animate-on-scroll animate-delay-2">
+                    <a href="#" class="category-pill">
+                        <span class="category-icon">🔥</span>
+                        <span>Trending</span>
+                    </a>
+                    <a href="#" class="category-pill">
+                        <span class="category-icon">⚔️</span>
+                        <span>Action</span>
+                    </a>
+                    <a href="#" class="category-pill">
+                        <span class="category-icon">💕</span>
+                        <span>Romance</span>
+                    </a>
+                    <a href="#" class="category-pill active">
+                        <span class="category-icon">🎨</span>
+                        <span>Animation</span>
+                    </a>
+                    <a href="#" class="category-pill">
+                        <span class="category-icon">👻</span>
+                        <span>Horror</span>
+                    </a>
+                    <a href="#" class="category-pill">
+                        <span class="category-icon">⭐</span>
+                        <span>Special</span>
+                    </a>
+                    <a href="#" class="category-pill">
+                        <span class="category-icon">🎭</span>
+                        <span>Drama</span>
+                    </a>
+                    <a href="#" class="category-pill">
+                        <span class="category-icon">🤣</span>
+                        <span>Komödie</span>
+                    </a>
+                </div>
+
+                <!-- Trending in Animation -->
+                <div class="animate-on-scroll animate-delay-3">
+                    <div class="section-header">
+                        <h3 class="section-title">Trending in Animation</h3>
+                        <div class="section-controls">
+                            <div class="control-btn">◀</div>
+                            <div class="control-btn">▶</div>
+                        </div>
+                    </div>
+
+                    <div class="movie-scroll">
+                        <div class="movie-card">
+                            <div class="movie-poster">
+                                <div class="movie-placeholder">🦍</div>
+                                <div class="movie-overlay">
+                                    <button class="movie-overlay-btn">Details ansehen</button>
+                                </div>
+                            </div>
+                            <div class="movie-info">
+                                <div class="movie-title">Loetoeng Kasarung</div>
+                                <div class="movie-meta">
+                                    <span class="movie-rating">⭐ 7.8</span>
+                                    <span>2023</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="movie-card">
+                            <div class="movie-poster">
+                                <div class="movie-placeholder">🐘</div>
+                                <div class="movie-overlay">
+                                    <button class="movie-overlay-btn">Details ansehen</button>
+                                </div>
+                            </div>
+                            <div class="movie-info">
+                                <div class="movie-title">Gajah Langka</div>
+                                <div class="movie-meta">
+                                    <span class="movie-rating">⭐ 6.0</span>
+                                    <span>2023</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="movie-card">
+                            <div class="movie-poster">
+                                <div class="movie-placeholder">🏝️</div>
+                                <div class="movie-overlay">
+                                    <button class="movie-overlay-btn">Details ansehen</button>
+                                </div>
+                            </div>
+                            <div class="movie-info">
+                                <div class="movie-title">Si Kang Satay</div>
+                                <div class="movie-meta">
+                                    <span class="movie-rating">⭐ 7.1</span>
+                                    <span>2023</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="movie-card">
+                            <div class="movie-poster">
+                                <div class="movie-placeholder">🐱</div>
+                                <div class="movie-overlay">
+                                    <button class="movie-overlay-btn">Details ansehen</button>
+                                </div>
+                            </div>
+                            <div class="movie-info">
+                                <div class="movie-title">Mommy Cat</div>
+                                <div class="movie-meta">
+                                    <span class="movie-rating">⭐ 7.8</span>
+                                    <span>2023</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="movie-card">
+                            <div class="movie-poster">
+                                <div class="movie-placeholder">🧕</div>
+                                <div class="movie-overlay">
+                                    <button class="movie-overlay-btn">Details ansehen</button>
+                                </div>
+                            </div>
+                            <div class="movie-info">
+                                <div class="movie-title">Hijaber Cantiq</div>
+                                <div class="movie-meta">
+                                    <span class="movie-rating">⭐ 6.1</span>
+                                    <span>2023</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="movie-card">
+                            <div class="movie-poster">
+                                <div class="movie-placeholder">⚔️</div>
+                                <div class="movie-overlay">
+                                    <button class="movie-overlay-btn">Details ansehen</button>
+                                </div>
+                            </div>
+                            <div class="movie-info">
+                                <div class="movie-title">Xatra-X</div>
+                                <div class="movie-meta">
+                                    <span class="movie-rating">⭐ 6.5</span>
+                                    <span>2022</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="movie-card">
+                            <div class="movie-poster">
+                                <div class="movie-placeholder">🌊</div>
+                                <div class="movie-overlay">
+                                    <button class="movie-overlay-btn">Details ansehen</button>
+                                </div>
+                            </div>
+                            <div class="movie-info">
+                                <div class="movie-title">Ocean Dreams</div>
+                                <div class="movie-meta">
+                                    <span class="movie-rating">⭐ 8.2</span>
+                                    <span>2024</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="movie-card">
+                            <div class="movie-poster">
+                                <div class="movie-placeholder">🌟</div>
+                                <div class="movie-overlay">
+                                    <button class="movie-overlay-btn">Details ansehen</button>
+                                </div>
+                            </div>
+                            <div class="movie-info">
+                                <div class="movie-title">Star Voyager</div>
+                                <div class="movie-meta">
+                                    <span class="movie-rating">⭐ 7.5</span>
+                                    <span>2024</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Coming Soon Section -->
+                <div class="coming-soon-section animate-on-scroll animate-delay-4">
+                    <div class="section-header">
+                        <h3 class="section-title">Demnächst im Kino</h3>
+                        <div class="section-controls">
+                            <div class="control-btn">📅</div>
+                        </div>
+                    </div>
+
+                    <div class="coming-soon-grid">
+                        <div class="coming-soon-card">
+                            <div class="coming-soon-placeholder">🚀</div>
+                            <div class="coming-soon-content">
+                                <span class="coming-soon-date">15. Jan 2025</span>
+                                <div class="coming-soon-title">Galaxy Warriors</div>
+                            </div>
+                        </div>
+                        <div class="coming-soon-card">
+                            <div class="coming-soon-placeholder">🏰</div>
+                            <div class="coming-soon-content">
+                                <span class="coming-soon-date">22. Jan 2025</span>
+                                <div class="coming-soon-title">The Last Kingdom</div>
+                            </div>
+                        </div>
+                        <div class="coming-soon-card">
+                            <div class="coming-soon-placeholder">🎪</div>
+                            <div class="coming-soon-content">
+                                <span class="coming-soon-date">05. Feb 2025</span>
+                                <div class="coming-soon-title">Circus Dreams</div>
+                            </div>
+                        </div>
+                        <div class="coming-soon-card">
+                            <div class="coming-soon-placeholder">🌋</div>
+                            <div class="coming-soon-content">
+                                <span class="coming-soon-date">14. Feb 2025</span>
+                                <div class="coming-soon-title">Volcanic Escape</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <footer>
+            <div class="footer-content">
+                <div class="footer-brand">
+                    <div class="logo">CINEMAX</div>
+                    <p>Dein ultimatives Kinoerlebnis. Erlebe die neuesten Blockbuster in atemberaubender Qualität mit erstklassigem Dolby Atmos Sound und luxuriösen Sitzen.</p>
+                    <div class="footer-social">
+                        <div class="social-icon">📘</div>
+                        <div class="social-icon">📸</div>
+                        <div class="social-icon">🐦</div>
+                        <div class="social-icon">📺</div>
+                    </div>
+                </div>
+                <div class="footer-section">
+                    <h4>NAVIGATION</h4>
+                    <ul>
+                        <li><a href="#">Startseite</a></li>
+                        <li><a href="#">Filme</a></li>
+                        <li><a href="#">Programm</a></li>
+                        <li><a href="#">Events</a></li>
+                        <li><a href="#">Über uns</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>SERVICE</h4>
+                    <ul>
+                        <li><a href="#">Preise</a></li>
+                        <li><a href="#">Gutscheine</a></li>
+                        <li><a href="#">Kindergeburtstag</a></li>
+                        <li><a href="#">Gruppenreservierung</a></li>
+                        <li><a href="#">VIP Lounge</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>KONTAKT</h4>
+                    <ul>
+                        <li><a href="#">Impressum</a></li>
+                        <li><a href="#">Datenschutz</a></li>
+                        <li><a href="#">AGB</a></li>
+                        <li><a href="#">Kontakt</a></li>
+                        <li><a href="#">FAQ</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <span>© 2024 CineMax. Alle Rechte vorbehalten.</span>
+                <span>Mit ❤️ gemacht für <a href="#">Kinoliebhaber</a></span>
+            </div>
+        </footer>
+    </div>
+
+    <script>
+        // Navbar visibility
+        const navbar = document.getElementById('navbar');
+        const hero = document.querySelector('.hero');
+        
+        const heroObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                navbar.classList.toggle('visible', !entry.isIntersecting);
+            });
+        }, { rootMargin: '-100px 0px 0px 0px' });
+        heroObserver.observe(hero);
+
+        // Scroll animations
+        const animatedElements = document.querySelectorAll('.animate-on-scroll');
+        const scrollObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, { threshold: 0.15, rootMargin: '0px 0px -50px 0px' });
+        animatedElements.forEach(el => scrollObserver.observe(el));
+
+        // Smooth scroll
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+            });
+        });
+
+        // Category pill selection
+        document.querySelectorAll('.category-pill').forEach(pill => {
+            pill.addEventListener('click', (e) => {
+                e.preventDefault();
+                document.querySelectorAll('.category-pill').forEach(p => p.classList.remove('active'));
+                pill.classList.add('active');
+            });
+        });
+
+        // Parallax effect for ambient lights
+        window.addEventListener('scroll', () => {
+            const scrollY = window.pageYOffset;
+            document.querySelectorAll('.ambient-light').forEach((light, i) => {
+                const speed = 0.1 + (i * 0.05);
+                light.style.transform = `translate(${Math.sin(scrollY * 0.01 + i) * 30}px, ${scrollY * speed}px)`;
+            });
+        });
+
+        // Movie scroll controls
+        const movieScroll = document.querySelector('.movie-scroll');
+        document.querySelectorAll('.control-btn').forEach((btn, i) => {
+            btn.addEventListener('click', () => {
+                const scrollAmount = 400;
+                if (btn.textContent === '◀') {
+                    movieScroll.scrollBy({ left: -scrollAmount, behavior: 'smooth' });
+                } else if (btn.textContent === '▶') {
+                    movieScroll.scrollBy({ left: scrollAmount, behavior: 'smooth' });
+                }
+            });
+        });
+    </script>
+</body>
+</html>
