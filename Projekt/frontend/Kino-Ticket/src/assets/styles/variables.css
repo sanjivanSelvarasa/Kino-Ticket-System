@@ -1,0 +1,15 @@
+:root {
+    /* Farben */
+    --color-primary: #FDCD1F;
+    --color-secondary: #1a0f0a;
+    --color-bg: #FDCD1F;
+    --color-normal-text: #ffffff;
+    --color-primary-text: #1a0f0a;
+    --color-secondary-text: #FDCD1F;
+
+    /* Typografie */
+    --font-family-base: 'Plus Jakarta Sans', sans-serif;
+    --font-size-base: 16px;
+    --font-size-title: 24px;
+    --font-size-text: 12px;
+}
