@@ -6,6 +6,9 @@
 
 <template>
   <AppHeader />
+
+  <div class="bg-blue-500">hello world</div>
+
   <RouterView></RouterView>
   <AppFooter />
 </template>
