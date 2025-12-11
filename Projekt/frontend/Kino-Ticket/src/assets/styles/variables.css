@@ -8,7 +8,8 @@
     --color-secondary-text: #FDCD1F;
 
     /* Typografie */
-    --font-family-base: 'Plus Jakarta Sans', sans-serif;
+    /*--font-family-base: 'Plus Jakarta Sans', sans-serif;*/
+    --font-family-base: 'Outfit', sans-serif;
     --font-size-base: 16px;
     --font-size-title: 24px;
     --font-size-text: 12px;
