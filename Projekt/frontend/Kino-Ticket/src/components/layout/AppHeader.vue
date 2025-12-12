@@ -10,9 +10,9 @@
     </div>
     <div class="flex flex-row w-lg ">
       <RouterLink class="py-3 px-4 mx-3" to="/">Home</RouterLink>
-      <RouterLink class="py-3 px-4" to="/">Filme</RouterLink>
+      <RouterLink class="py-3 px-4" to="/movie">Filme</RouterLink>
       <RouterLink class="py-3 px-4" to="/">Programm</RouterLink>
-      <RouterLink class="py-3 px-4" to="/">Events</RouterLink>
+      <RouterLink class="py-3 px-4" to="/login">Login</RouterLink>
       <RouterLink class="py-3 px-4" to="/">Über uns</RouterLink>
     </div>
     <div class="flex  gap-2">
