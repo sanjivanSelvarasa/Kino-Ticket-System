@@ -2,7 +2,7 @@
 </script>
 
 <template>
-  <div id="header" style="font-family: var(--font-family-base), 'Droid Sans'" class="flex items-center justify-between w-full px-10 py-6 text-black">
+  <div id="header" style="font-family: var(--font-family-base), 'Droid Sans'" class="fixed top-0 left-0 flex items-center justify-between w-full px-10 py-6 text-black">
     <div class="">
       <div class="flex justify-between align-middle w-30 h-10">
         <img src="..\..\src\assets\vue.svg" alt="logo">

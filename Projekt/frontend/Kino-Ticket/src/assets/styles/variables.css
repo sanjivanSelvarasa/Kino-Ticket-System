@@ -6,6 +6,7 @@
     --color-normal-text: #ffffff;
     --color-primary-text: #1a0f0a;
     --color-secondary-text: #FDCD1F;
+    --color-transparent-text: rgba(224, 221, 211, 0.2);
 
     /* Typografie */
     /*--font-family-base: 'Plus Jakarta Sans', sans-serif;*/
