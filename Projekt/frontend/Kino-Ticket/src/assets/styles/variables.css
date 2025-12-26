@@ -14,4 +14,8 @@
     --font-size-base: 16px;
     --font-size-title: 24px;
     --font-size-text: 12px;
+
+    --shadow-soft: 0 4px 20px rgba(26, 15, 10, 0.08);
+    --shadow-medium: 0 8px 40px rgba(26, 15, 10, 0.12);
+    --shadow-strong: 0 20px 60px rgba(26, 15, 10, 0.2);
 }
