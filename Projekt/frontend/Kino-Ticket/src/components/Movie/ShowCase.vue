@@ -1,0 +1,26 @@
+<script lang="ts" setup>
+  const props = defineProps<{
+    image: string,
+    rating: number,
+    title: string,
+    genre: string,
+    length: number,
+  }>()
+</script>
+
+<template>
+  <div style="color: var(--color-primary-text)">
+    <div class="w-[200px] h-[350px] rounded-md bg-amber-800">
+      <div style="background-color: var(--color-primary); color: var(--color-primary-text)" class="flex items-center justify-center gap-1 px-2 py-1 w-fit m-2 rounded-md float-right text-sm">
+        <i class="fa-solid fa-star text-xs"></i>
+        <span>{{rating}}</span>
+      </div>
+    </div>
+    <h5 class="font-bold text-sm ml-1 mt-2">{{title}}</h5>
+    <div class="flex items-center justify-start gap-1 w-full text-xs ml-1">
+      <span>{{genre}}</span>
+      <i class="fa-solid fa-circle text-[3px]"></i>
+      <span>{{length}} Min</span>
+    </div>
+  </div>
+</template>

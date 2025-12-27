@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@tailwindcss/vite": "^4.1.18",
+    "tailwind-scrollbar": "^4.0.2",
     "vue": "^3.5.18",
     "vue-router": "^4.6.3"
   },
