@@ -1,12 +1,8 @@
 <script lang="ts" setup>
-  const props = defineProps<{
-    width: string
-  }>()
-
 </script>
 
 <template>
-  <div style="color: var(--color-primary-text)" id="showCard" :class="props.width" class="text-sm">
+  <div style="color: var(--color-primary-text)" id="showCard" class="text-sm">
     <div class="flex items-center justify-center w-full aspect-[10/16] rounded-2xl mb-1 bg-amber-950">
       <i class="fa-solid fa-hippo text-[30px] text-amber-50"></i>
     </div>

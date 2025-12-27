@@ -8,7 +8,7 @@ services:
     environment:
       POSTGRES_USER: myuser
       POSTGRES_PASSWORD: mypassword
-      POSTGRES_DB: mydb
+      POSTGRES_DB: kinoSystemDB
     ports:
       - "5432:5432"
     volumes:
@@ -21,8 +21,8 @@ services:
     depends_on:
       - db
     environment:
-      PGRST_DB_URI: postgres://myuser:mypassword@db:5432/mydb
-      PGRST_DB_SCHEMA: public
+      PGRST_DB_URI: postgres://myuser:mypassword@db:5432/kinoSystemDB
+      PGRST_DB_SCHEMAS: public
       PGRST_DB_ANON_ROLE: myuser
     ports:
       - "3001:3000"

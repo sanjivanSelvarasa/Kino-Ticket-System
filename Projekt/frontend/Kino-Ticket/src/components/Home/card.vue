@@ -1,11 +1,8 @@
 <script lang="ts" setup>
-  const props = defineProps<{
-    width: String
-  }>()
 </script>
 
 <template>
-  <div id="card" :class="props.width" style="background: linear-gradient(135deg, #4A6FA5 0%, #2D4A6F 50%, #1A2D45 100%); color: var(--color-normal-text)" class="flex flex-col justify-around gap-3 rounded-4xl px-6 py-6 aspect-video max-w-fit">
+  <div id="card" style="background: linear-gradient(135deg, #4A6FA5 0%, #2D4A6F 50%, #1A2D45 100%); color: var(--color-normal-text)" class="flex flex-col justify-around gap-3 rounded-4xl px-6 py-6 aspect-video">
     <div style="background-color: var(--color-transparent-text)" class="ml-auto flex items-center justify-center w-fit px-4 py-2 rounded-full">
       <i class="fa-solid fa-star"></i>
       <p class="ml-1">8.5</p>
