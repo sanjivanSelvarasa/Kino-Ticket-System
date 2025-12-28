@@ -48,9 +48,9 @@
         </div>
 
         <div class="flex items-center gap-2 uppercase my-4 w-full">
-          <button class="w-1/3"><i class="fa-brands fa-google"></i></button>
-          <button class="w-1/3"><i class="fa-brands fa-apple"></i></button>
-          <button class="w-1/3"><i class="fa-brands fa-facebook"></i></button>
+          <button class="flex-1"><i class="fa-brands fa-google"></i></button>
+          <button class="flex-1"><i class="fa-brands fa-apple"></i></button>
+          <button class="flex-1"><i class="fa-brands fa-facebook"></i></button>
         </div>
 
         <div class="flex items-center justify-center gap-1 my-5 w-full text-xs">
@@ -70,5 +70,25 @@
     flex: 1;
     height: 1px;
     background: rgba(255, 255, 255, 0.1);
+  }
+
+  button {
+    border-radius: 8px;
+    border: 2px solid var(--color-normal-text);
+    padding: 0.6em 1.2em;
+    font-size: 1em;
+    font-weight: 500;
+    font-family: inherit;
+    background-color: var(--color-secondary);
+    cursor: pointer;
+    transition: border-color 0.25s;
+  }
+
+  button:hover {
+    border-color: var(--color-primary);
+  }
+  button:focus,
+  button:focus-visible {
+    outline: 2px auto var(--color-primary);
   }
 </style>

@@ -99,4 +99,24 @@ const props = withDefaults(defineProps<{
 
 <style scoped>
 @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Huninn&family=Roboto:ital,wght@0,100..900;1,100..900&display=swap');
+
+button {
+  border-radius: 8px;
+  border: 2px solid var(--color-normal-text);
+  padding: 0.6em 1.2em;
+  font-size: 1em;
+  font-weight: 500;
+  font-family: inherit;
+  background-color: var(--color-secondary);
+  cursor: pointer;
+  transition: border-color 0.25s;
+}
+
+button:hover {
+  border-color: var(--color-primary);
+}
+button:focus,
+button:focus-visible {
+  outline: 2px auto var(--color-primary);
+}
 </style>
