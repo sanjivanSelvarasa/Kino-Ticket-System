@@ -17,7 +17,7 @@
       </div>
       <div style="background-color: var(--color-secondary)" class="px-6 py-4 w-fit rounded-xl min-w-[420px]">
         <div style="color: var(--color-normal-text)" class="my-4 w-full text-center">
-          <h2 class="font-bold text-2xl">Willkommen zurück</h2>
+          <h4 class="font-bold text-2xl">Willkommen zurück</h4>
           <p class="text-sm">Melde dich an, um Tickets zu buchen</p>
         </div>
 
@@ -55,7 +55,7 @@
 
         <div class="flex items-center justify-center gap-1 my-5 w-full text-xs">
           <span class="">Noch kein Konto?</span>
-          <RouterLink style="color: var(--color-secondary-text)" class="font-bold underline"> Jetzt regristrieren</RouterLink>
+          <RouterLink style="color: var(--color-secondary-text)" class="font-bold underline">Jetzt regristrieren</RouterLink>
         </div>
       </div>
     </div>

@@ -1,6 +1,6 @@
 DROP TABLE IF EXISTS Ticket, AppUser, Show, Room, ProgramTime, Movie CASCADE;
 
-CREATE TABLE IF NOT EXISTS Movie(
+        CREATE TABLE IF NOT EXISTS Movie(
             MovieID INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
             image VARCHAR(50) NULL,
             awards VARCHAR(50) NULL,

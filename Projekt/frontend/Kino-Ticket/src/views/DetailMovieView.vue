@@ -7,23 +7,22 @@ import type {Movie} from "../types/movie.ts";
 import TodayShows from "../components/DetailMovie/TodayShows.vue";
 
 const props = defineProps<{
-  image: string | null,
-  title: string,
-  awards: string,
-  rating: string,
-  releaseDate: Date,
-  length: number,
-  ageRating: number,
-  genre: string,
-  description: string,
+  id: number
 }>()
 
+const selectedMovie = ref<Movie>();
 const movies = ref<Movie[]>([]);
-const loading = ref<boolean>(false);
+const moviesGenre = ref<Movie[]>([]);
+const loading = ref<boolean>(true);
+
+const randIndicies = ref<number[]>([]);
 
 onMounted( async () => {
   try{
-    movies.value = (await moviesRepo.getAllMovies()).filter((movie) => movie.genre === props.genre)
+    selectedMovie.value = await moviesRepo.getById(props.id);
+    movies.value = (await moviesRepo.getAllMovies())
+    moviesGenre.value = moviesGenre.value.filter((movie) => movie.genre === selectedMovie.value?.genre)
+    randIndicies.value = getRandomIndices(movies.value.length - 1, movies.value.length);
   }
   catch(e: any){
     e.value = e.error ?? "Fehler beim Laden";
@@ -33,21 +32,39 @@ onMounted( async () => {
   }
 })
 
+// Random Number Gen
+function getRandomIndices(count: number, max: number): number[] {
+  const indices = new Set<number>();
+  while (indices.size < count && indices.size < max) {
+    indices.add(Math.floor(Math.random() * max));
+  }
+  return [...indices];
+}
+
+// test array
+const todayShow = ["18:45", "19:00", "20:45"]
+
 </script>
 
 <template>
-  <Hero :image="props.image" :title="props.title" :awards="props.awards" :rating="props.rating" :releaseDate="props.releaseDate" :length="props.length" :ageRating="props.ageRating" :genre="props.genre" :description="props.description"></Hero>
+  <Hero v-if="selectedMovie?.movieid" :image="selectedMovie.image" :title="selectedMovie.title" :awards="selectedMovie.awards" :rating="selectedMovie.rating" :releaseDate="selectedMovie.releasedate" :length="selectedMovie.length" :ageRating="selectedMovie.agerating" :genre="selectedMovie.genre" :description="selectedMovie.description"></Hero>
 
-  <div>
+  <div class="pb-15 px-10">
     <h2>Filme die dir gefallen könnten</h2>
-    <div class="flex items-center justify-start gap-4 pb-4 overflow-x-hidden">
-      <SoonInCinemaCard v-for="i in [0,1,2]" :release="movies[i].releasedate" :title="movies[i].title"></SoonInCinemaCard>
+    <div class="flex items-center justify-start gap-4 overflow-x-hidden pt-4">
+      <SoonInCinemaCard v-if="movies.length > 1" v-for="i in 4" :release="movies[i].releasedate" :title="movies[i].title" class="w-1/4"></SoonInCinemaCard>
     </div>
   </div>
-  <div>
-    <h2>Heutige Vorstellungen</h2>
-    <div class="flex items-center justify-start gap-4 pb-4 overflow-x-hidden">
-      <TodayShows v-for="i in 3" title="" image="null" todayShow=""></TodayShows>
+  <div class="px-10 bg-[var(--color-secondary)] py-5 rounded-t-4xl border-b-1 border-b-[var(--color-primary)]">
+    <div class="flex items-center justify-between gap-4 overflow-x-hidden">
+      <h1 style="color: var(--color-secondary-text) !important; font-size: 35px !important;" class="py-5">Heutige Vorstellungen</h1>
+      <div class="flex items-center justify-center gap-2 overflow-x-hidden cursor-pointer text-[var(--color-secondary-text)]">
+        <p>Vollständiges Programm</p>
+        <i class="fa-solid fa-arrow-right"></i>
+      </div>
+    </div>
+    <div class="flex items-center justify-start gap-4 pb-4 overflow-x-hidden w-full">
+      <TodayShows v-if="movies.length > 1" v-for="i in 4" :title="movies[randIndicies[i]].title" :image="movies[randIndicies[i]].image" :todayShow="todayShow" class="w-1/4"></TodayShows>
     </div>
   </div>
 </template>

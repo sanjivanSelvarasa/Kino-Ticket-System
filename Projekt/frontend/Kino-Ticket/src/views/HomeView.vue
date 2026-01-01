@@ -67,7 +67,7 @@ function selectGenre(genre: string ): void {
 
         <!-- Trending in ...  -->
         <div>
-          <h2 style="color: var(--color-primary-text)" class="my-7 w-full font-bold text-2xl">
+          <h2>
             Trending in {{ selectedGenre }}
           </h2>
           <div class="flex items-center justify-start gap-4 pb-4 overflow-x-auto overflow-y-visible pt-4 no-scrollbar">
@@ -78,7 +78,7 @@ function selectGenre(genre: string ): void {
 
       <!-- Demnächst im Kino -->
       <section class="mt-12">
-        <h2 style="color: var(--color-primary-text)" class="my-7 w-full font-bold text-2xl">
+        <h2>
           Demnächst im Kino
         </h2>
         <div class="flex items-center justify-start gap-4 pb-4">

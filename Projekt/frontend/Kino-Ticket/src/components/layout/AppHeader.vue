@@ -4,7 +4,6 @@
       ["Filme", "/movie"],
       ["Programm", "/"],
       ["Login", "/login"],
-      ["Über uns", "/"]
   ])
 </script>
 

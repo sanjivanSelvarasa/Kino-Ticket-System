@@ -6,6 +6,7 @@ import MovieView from "../views/MovieView.vue";
 import HomeView from "../views/HomeView.vue";
 import LoginView from "../views/LoginView.vue";
 import AdminView from "../views/AdminView.vue";
+import BuyTickets from "../views/BuyTickets.vue";
 
 const routes = [
     {
@@ -19,9 +20,10 @@ const routes = [
         component: MovieView,
     },
     {
-        path: '/movieDetail',
+        path: '/movieDetail/:id',
         name: 'movieDetail',
         component: DetailMovieView,
+        props: route => ({ id: Number(route.params.id) }),
     },
     {
         path: '/login',
@@ -32,6 +34,12 @@ const routes = [
         path: '/adminView',
         name: 'adminView',
         component: AdminView,
+    },
+    {
+        path: '/tickets/:id',
+        name: 'tickets',
+        component: BuyTickets,
+        props: route => ({ id: Number(route.params.id) }),
     }
 ]
 

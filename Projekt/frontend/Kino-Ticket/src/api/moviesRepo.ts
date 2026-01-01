@@ -12,6 +12,20 @@ export const moviesRepo = {
                 }))
             );
     },
+    getById(id: number): Promise<Movie> {
+        return http<Movie[]>(`/movie?movieid=eq.${id}&limit=1`)
+            .then(rows => {
+                if (rows.length === 0) {
+                    throw new Error(`No movie with id ${id}`);
+                }
+
+                const r = rows[0];
+                return {
+                    ...r,
+                    releasedate: new Date(r.releasedate),
+                };
+            });
+    }
 
 
 }

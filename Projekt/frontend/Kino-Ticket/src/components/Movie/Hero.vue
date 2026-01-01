@@ -20,7 +20,7 @@
         <span class="">{{ props.awards}}</span>
       </div>
 
-      <h1 style="color: var(--color-primary-text); text-shadow: rgba(255, 255, 255, 0.3) 4px 4px 0px; " class="text-7xl font-extrabold tracking-wide mb-5">{{ props.title }}</h1>
+      <h1 class="tracking-wide">{{ props.title }}</h1>
 
       <div class="flex items-center justify-start gap-4 w-full text-base">
         <div style="background-color: var(--color-secondary); color: var(--color-secondary-text)" class="flex items-center justify-center gap-1 rounded-sm px-2 py-1">
@@ -40,15 +40,19 @@
       <p class="my-4 w-full">{{ props.description}}</p>
 
       <div class="flex items-center justify-start gap-4 w-full">
-        <div style="background-color: var(--color-secondary); color: var(--color-secondary-text)" class="cursor-pointer font-bold flex gap-2 py-4 px-6 rounded-md">
-          <i class="fa-solid fa-play"></i>
+        <button class="cursor-pointer text-[var(--color-secondary-text)] bg-[var(--color-secondary)] font-bold flex gap-2 py-4 px-6 rounded-md border-2 hover:border-[var(--color-secondary)] hover:bg-[var(--color-primary)] hover:text-[var(--color-primary-text)] hover:scale-[1.01] transition-all duration-500">
+          <div class="flex items-center justify-center">
+            <i class="fa-solid fa-play"></i>
+          </div>
           <span>Tickets buchen</span>
-        </div>
+        </button>
 
-        <div style="background-color: var(--color-normal-text); color: var(--color-primary-text)" class="cursor-pointer font-bold flex gap-2 py-4 px-6 rounded-md">
-          <i class="fa-solid fa-info"></i>
+        <button class="bg-[var(--color-normal-text)] text-[var(--color-primary-text)] cursor-pointer font-bold flex gap-2 py-4 px-6 rounded-md border-2 border-transparent hover:border-[var(--color-normal-text)] hover:bg-[var(--color-primary-text)] hover:text-[var(--color-normal-text)] hover:scale-[1.01] transition-all duration-500">
+          <div class="flex items-center justify-center">
+            <i class="fa-solid fa-info"></i>
+          </div>
           <span>Mehr Infos</span>
-        </div>
+        </button>
       </div>
 
       <div class="mt-6 w-full ">

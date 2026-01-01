@@ -8,7 +8,7 @@
 </script>
 
 <template>
-  <div style="color: var(--color-primary-text)" id="showCard" class="text-sm cursor-pointer overflow-x-hidden hover:translate-y-[-8px] hover:scale-[1.01] transition-all duration-500">
+  <div style="color: var(--color-primary-text)" id="showCard" class="text-sm cursor-pointer overflow-x-hidden hover-up">
     <div class="flex items-center justify-center w-full aspect-[10/16] rounded-2xl mb-1 bg-amber-950">
       <i class="fa-solid fa-hippo text-[30px] text-amber-50"></i>
     </div>
