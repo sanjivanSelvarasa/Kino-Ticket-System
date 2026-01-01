@@ -12,8 +12,20 @@ const PGRST = process.env.PGRST_URL;
 
 // DB durchgeben
 app.get("/api/movie", async (req, res) => {
-    const r = await fetch(`${PGRST}/movie?select=*`);
-    res.status(r.status).send(await r.text());
+  const qs = new URLSearchParams(req.query).toString();
+  const url = `${PGRST}/movie?select=*${qs ? "&" + qs : ""}`;
+
+  console.log("Proxy ->", url); // wichtig zum Debuggen
+  const r = await fetch(url);
+
+  res.status(r.status).send(await r.text());
+});
+
+
+app.get("/api/movie/:id", async (req, res) => {
+  const id = Number(req.params.id);
+  const r = await fetch(`${PGRST}/movie?movieid=eq.${id}&limit=1&select=*`);
+  res.status(r.status).send(await r.text());
 });
 
 // TMDB Suchfunktion

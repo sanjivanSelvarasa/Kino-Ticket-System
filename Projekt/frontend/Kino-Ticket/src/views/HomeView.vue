@@ -82,7 +82,7 @@ function selectGenre(genre: string ): void {
           Demnächst im Kino
         </h2>
         <div class="flex items-center justify-start gap-4 pb-4">
-          <SoonInCinemaCard v-if="randomIndices.length > 1 && movies.length > randomIndices.length" v-for="i in [11,12,13,14,15]" :key="i" :title="movies[i].title" :release="movies[i].releasedate" class="flex-shrink-0 w-[320.4px]"></SoonInCinemaCard>
+          <SoonInCinemaCard v-if="randomIndices.length > 1 && movies.length > randomIndices.length" v-for="i in [11,12,13,14,15]" :id="movies[i].movieid" :title="movies[i].title" :release="movies[i].releasedate" class="flex-shrink-0 w-[320.4px]"></SoonInCinemaCard>
         </div>
       </section>
     </div>

@@ -1,12 +1,12 @@
 import {createRouter, createWebHistory} from 'vue-router'
-import Home from '../views/MovieView.vue'
-import Movie from '../views/MovieView.vue'
 import DetailMovieView from "../views/DetailMovieView.vue";
 import MovieView from "../views/MovieView.vue";
 import HomeView from "../views/HomeView.vue";
 import LoginView from "../views/LoginView.vue";
 import AdminView from "../views/AdminView.vue";
 import BuyTickets from "../views/BuyTickets.vue";
+import RegistrationView from "../views/RegistrationView.vue";
+import ShoppingCart from "../views/ShoppingCart.vue";
 
 const routes = [
     {
@@ -31,6 +31,11 @@ const routes = [
         component: LoginView,
     },
     {
+      path: '/registration',
+      name: 'registration',
+      component: RegistrationView,
+    },
+    {
         path: '/adminView',
         name: 'adminView',
         component: AdminView,
@@ -40,12 +45,19 @@ const routes = [
         name: 'tickets',
         component: BuyTickets,
         props: route => ({ id: Number(route.params.id) }),
+    },
+    {
+        path: '/shoppingcart',
+        name: 'shoppingcart',
+        component: ShoppingCart,
     }
 ]
 
 const router = createRouter({
     history: createWebHistory(),
-    routes
+    routes,
+    scrollBehavior: () => ({ top: 0 }),
+
 })
 
 export default router

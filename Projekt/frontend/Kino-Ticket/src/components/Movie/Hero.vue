@@ -1,5 +1,6 @@
 <script lang="ts" setup>
   const props = defineProps<{
+    id: number,
     image: string | null,
     title: string,
     awards: string,
@@ -10,6 +11,7 @@
     genre: string,
     description: string,
   }>()
+
 </script>
 
 <template>
@@ -44,7 +46,7 @@
           <div class="flex items-center justify-center">
             <i class="fa-solid fa-play"></i>
           </div>
-          <span>Tickets buchen</span>
+          <RouterLink :to="{ name: 'tickets', params: {id: props.id}}">Tickets buchen</RouterLink>
         </button>
 
         <button class="bg-[var(--color-normal-text)] text-[var(--color-primary-text)] cursor-pointer font-bold flex gap-2 py-4 px-6 rounded-md border-2 border-transparent hover:border-[var(--color-normal-text)] hover:bg-[var(--color-primary-text)] hover:text-[var(--color-normal-text)] hover:scale-[1.01] transition-all duration-500">

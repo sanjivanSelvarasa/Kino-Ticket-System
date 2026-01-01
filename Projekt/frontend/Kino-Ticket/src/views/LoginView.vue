@@ -1,5 +1,6 @@
 <script lang="ts" setup>
   import {RouterLink} from "vue-router";
+  import InputField from "../components/Login/InputField.vue";
 </script>
 
 <template>
@@ -23,20 +24,15 @@
 
         <!--  Input fields-->
         <div>
-          <label for="email" style="color: var(--color-secondary-text)" class="block text-xs mb-1 ml-1 uppercase" >E-Mail</label>
-          <input id="email" type="email" name="email" placeholder="Max@email.com" required class="block px-4 py-3 w-full bg-white/5 border-white/10
- rounded-xl border-1 mb-4 text-sm">
-
-          <label for="password" style="color: var(--color-secondary-text)" class="block text-xs mb-1 ml-1 uppercase" >Passwort</label>
-          <input id="password" type="password" name="password" placeholder="123Sicher" required class="block px-4 py-3 w-full bg-white/5 border-white/10
- rounded-xl border-1 text-sm">
-          </div>
+          <InputField inputName="email" inputType="email" label="E-Mail" placeholder="Max@email.com"></InputField>
+          <InputField inputName="password" inputType="password" label="Passwort" placeholder="123Sicher"></InputField>
+        </div>
 
         <!--      Angemeldet bleiben & Passwort vergessen?-->
         <div class="flex items-center justify-between gap-2 my-3 text-xs">
-          <div class="flex items-center justify-start gap-1">
-            <input type="checkbox" id="checkbox" name="checkbox" class="bg-transparent"/>
-            <label for="checkbox">Angemeldet bleiben</label>
+          <div class="flex items-center justify-start gap-1 cursor-pointer">
+            <input type="checkbox" id="checkbox" name="checkbox" class="bg-transparent cursor-pointer"/>
+            <label for="checkbox" class="cursor-pointer">Angemeldet bleiben</label>
           </div>
           <RouterLink style="color: var(--color-secondary-text)" class="underline" to="/">Passwort vergessen?</RouterLink>
         </div>
@@ -55,7 +51,7 @@
 
         <div class="flex items-center justify-center gap-1 my-5 w-full text-xs">
           <span class="">Noch kein Konto?</span>
-          <RouterLink style="color: var(--color-secondary-text)" class="font-bold underline">Jetzt regristrieren</RouterLink>
+          <RouterLink to="/registration" style="color: var(--color-secondary-text)" class="font-bold underline">Jetzt regristrieren</RouterLink>
         </div>
       </div>
     </div>

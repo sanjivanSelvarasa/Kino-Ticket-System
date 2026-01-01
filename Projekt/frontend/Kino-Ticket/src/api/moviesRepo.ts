@@ -13,7 +13,7 @@ export const moviesRepo = {
             );
     },
     getById(id: number): Promise<Movie> {
-        return http<Movie[]>(`/movie?movieid=eq.${id}&limit=1`)
+        return http<Movie[]>(`/movie?movieid=eq.${id}`)
             .then(rows => {
                 if (rows.length === 0) {
                     throw new Error(`No movie with id ${id}`);

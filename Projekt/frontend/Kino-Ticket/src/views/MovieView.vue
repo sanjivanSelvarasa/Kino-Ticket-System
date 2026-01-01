@@ -75,7 +75,7 @@ function scrollRight(index: number){
 </script>
 
 <template>
-  <Hero v-if="randomIndices.length > 1" :image="movies[randomIndices[0]].image" :title="movies[randomIndices[0]].title" :awards="movies[randomIndices[0]].awards" :rating="movies[randomIndices[0]].rating" :releaseDate="movies[randomIndices[0]].releasedate" :length="movies[randomIndices[0]].length" :ageRating="movies[randomIndices[0]].agerating" :genre="movies[randomIndices[0]].genre" :description="movies[randomIndices[0]].description"></Hero>
+  <Hero v-if="randomIndices.length > 1" :id="movies[randomIndices[0]].movieid" :image="movies[randomIndices[0]].image" :title="movies[randomIndices[0]].title" :awards="movies[randomIndices[0]].awards" :rating="movies[randomIndices[0]].rating" :releaseDate="movies[randomIndices[0]].releasedate" :length="movies[randomIndices[0]].length" :ageRating="movies[randomIndices[0]].agerating" :genre="movies[randomIndices[0]].genre" :description="movies[randomIndices[0]].description"></Hero>
 
   <main class="px-10">
     <div v-for="i in uniqueGenre.length" class="relative">
@@ -83,7 +83,7 @@ function scrollRight(index: number){
       <section class="mb-15">
         <h2 style="color: var(--color-primary-text)" class="font-bold text-2xl mb-5">{{uniqueGenre[i]}}</h2>
         <div :ref="el => setRowRef(el as HTMLElement | null, i)" class="flex items-center justify-start gap-4 w-full overflow-auto no-scrollbar pt-4">
-          <ShowCase v-for="item in movies.filter((movie) => movie.genre === uniqueGenre[i])" :id="item.movieid" :title="item.title" :image="item.image" :rating="item.rating" :genre="item.genre" :length="item.length"></ShowCase>
+          <ShowCase v-for="item in movies.filter((movie) => movie.genre === uniqueGenre[i])" :key="item.movieid" :id="item.movieid" :title="item.title" :image="item.image" :rating="item.rating" :genre="item.genre" :length="item.length"></ShowCase>
         </div>
       </section>
       <button v-if="canScrollRight[i]" @click="scrollRight(i)" class="cursor-pointer absolute right-2 top-[50%] translate-y-[-50%] border-4 border-[var(--color-primary)] w-[55px] h-[55px] rounded-full bg-[var(--color-secondary)] hover:bg-[var(--color-primary)] hover:border-[var(--color-secondary)] hover:text-[var(--color-primary-text)] transition-all duration-300"><i class="fa-solid fa-arrow-right"></i></button>
