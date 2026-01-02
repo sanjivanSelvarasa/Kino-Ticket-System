@@ -1,4 +1,5 @@
-import {createRouter, createWebHistory} from 'vue-router'
+import {createRouter, createWebHistory, type RouteLocationNormalized} from 'vue-router'
+import {useAuthStore} from "../stores/auth.js";
 import DetailMovieView from "../views/DetailMovieView.vue";
 import MovieView from "../views/MovieView.vue";
 import HomeView from "../views/HomeView.vue";
@@ -23,7 +24,7 @@ const routes = [
         path: '/movieDetail/:id',
         name: 'movieDetail',
         component: DetailMovieView,
-        props: route => ({ id: Number(route.params.id) }),
+        props: (route: RouteLocationNormalized) => ({ id: Number(route.params.id) }),
     },
     {
         path: '/login',
@@ -44,12 +45,14 @@ const routes = [
         path: '/tickets/:id',
         name: 'tickets',
         component: BuyTickets,
-        props: route => ({ id: Number(route.params.id) }),
+        props: (route: RouteLocationNormalized) => ({ id: Number(route.params.id) }),
+        meta: { requiresAuth: true }
     },
     {
         path: '/shoppingcart',
         name: 'shoppingcart',
         component: ShoppingCart,
+        meta: { requiresAuth: true }
     }
 ]
 
@@ -58,6 +61,14 @@ const router = createRouter({
     routes,
     scrollBehavior: () => ({ top: 0 }),
 
+})
+
+router.beforeEach((to) => {
+    const auth = useAuthStore();
+
+    if(to.meta.requiresAuth && !auth.isLoggedIn) {
+        return { path: '/login' };
+    }
 })
 
 export default router

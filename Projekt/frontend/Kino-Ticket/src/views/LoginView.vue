@@ -1,6 +1,33 @@
 <script lang="ts" setup>
-  import {RouterLink} from "vue-router";
+import {RouterLink, useRouter} from "vue-router";
   import InputField from "../components/Login/InputField.vue";
+  import {ref} from "vue";
+  import {useAuthStore} from "../stores/auth.ts";
+
+  const email = ref("");
+  const password = ref("");
+  const error = ref<string | null>();
+
+  function assignEmail(newEmail: string){
+    email.value = newEmail;
+  }
+
+  function assignPassword(newPassword: string){
+    password.value = newPassword;
+  }
+
+  const auth = useAuthStore();
+  const router = useRouter();
+
+  async function submit() {
+    error.value = null;
+    try{
+      await auth.login(email.value, password.value);
+      await router.push("/");
+    }catch(e: any){
+      error.value = e ?? "Login fehlgeschlagen!";
+    }
+  }
 </script>
 
 <template>
@@ -24,8 +51,8 @@
 
         <!--  Input fields-->
         <div>
-          <InputField inputName="email" inputType="email" label="E-Mail" placeholder="Max@email.com"></InputField>
-          <InputField inputName="password" inputType="password" label="Passwort" placeholder="123Sicher"></InputField>
+          <InputField @input="assignEmail" inputName="email" inputType="email" label="E-Mail" placeholder="Max@email.com"></InputField>
+          <InputField @input="assignPassword" inputName="password" inputType="password" label="Passwort" placeholder="123Sicher"></InputField>
         </div>
 
         <!--      Angemeldet bleiben & Passwort vergessen?-->
@@ -37,7 +64,9 @@
           <RouterLink style="color: var(--color-secondary-text)" class="underline" to="/">Passwort vergessen?</RouterLink>
         </div>
 
-        <button :style="{ border: 'none' }" style="background-color: var(--color-primary); color: var(--color-primary-text)" class="w-full rounded-xl mt-2"><span class="font-base font-bold">Anmelden</span></button>
+        <p v-if="error" class="text-red-600 py-2">{{ error }}</p>
+
+        <button @click="submit" :style="{ border: 'none' }" style="background-color: var(--color-primary); color: var(--color-primary-text)" class="w-full rounded-xl mt-2"><span class="font-base font-bold">Anmelden</span></button>
 
         <div id="divider" class="my-4 w-full">
           <span class="flex items-center gap-2 uppercase text-xs">oder</span>
