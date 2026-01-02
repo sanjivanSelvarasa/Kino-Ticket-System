@@ -1,7 +1,7 @@
 <script lang="ts" setup>
   const props = defineProps<{
     id: number,
-    image: string | null,
+    image: string,
     title: string,
     awards: string,
     rating: string,
@@ -15,7 +15,8 @@
 </script>
 
 <template>
-  <header style="font-family: 'Bebas Neue', sans-serif;" class="flex items-center justify-start px-10 min-h-screen tracking-wider">
+  <header style="font-family: 'Bebas Neue', sans-serif;" class="mt-10 flex items-center justify-between flex-row-reverse px-10 min-h-screen tracking-wider">
+    <div :style="{ backgroundImage: `url(${props.image})`}" class="bg-right bg-cover aspect-square border-6 border-[var(--color-secondary)] rounded-2xl h-[40rem]"></div>
     <div class="w-fit max-w-[550px] ">
       <div style="background-color: var(--color-secondary); color: var(--color-secondary-text)" class="flex items-center justify-start gap-2 overflow-x-auto px-4 py-2 mb-5 text-sm rounded-sm w-fit font-bold">
         <i class="fa-solid fa-award"></i>

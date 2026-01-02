@@ -22,7 +22,7 @@ DROP TABLE IF EXISTS Ticket, AppUser, Show, Room, ProgramTime, Movie CASCADE;
         CREATE TABLE IF NOT EXISTS Room(
             RoomID INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
             name VARCHAR(30) NOT NULL,
-            description VARCHAR(50)
+            description VARCHAR(50) NULL
         );
 
         CREATE TABLE IF NOT EXISTS Show(
@@ -30,7 +30,6 @@ DROP TABLE IF EXISTS Ticket, AppUser, Show, Room, ProgramTime, Movie CASCADE;
             fk_movie_id INT NOT NULL REFERENCES Movie(MovieID),
             fk_room_id INT NOT NULL REFERENCES Room(RoomID),
             start_time TIME NOT NULL,
-            end_time TIME NOT NULL,
             price DECIMAL(5,2) NOT NULL
         );
 

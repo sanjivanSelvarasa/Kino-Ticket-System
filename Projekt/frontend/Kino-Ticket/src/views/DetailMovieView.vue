@@ -59,12 +59,12 @@ const todayShow = ["18:45", "19:00", "20:45"]
 </script>
 
 <template>
-  <Hero v-if="selectedMovie?.movieid" :id="selectedMovie.movieid" :image="selectedMovie.image" :title="selectedMovie.title" :awards="selectedMovie.awards" :rating="selectedMovie.rating" :releaseDate="selectedMovie.releasedate" :length="selectedMovie.length" :ageRating="selectedMovie.agerating" :genre="selectedMovie.genre" :description="selectedMovie.description"></Hero>
+  <Hero v-if="selectedMovie?.movieid" :id="selectedMovie.movieid" :image="selectedMovie.poster_path" :title="selectedMovie.title" :awards="selectedMovie.awards" :rating="selectedMovie.rating" :releaseDate="selectedMovie.releasedate" :length="selectedMovie.length" :ageRating="selectedMovie.agerating" :genre="selectedMovie.genre" :description="selectedMovie.description"></Hero>
 
   <div class="pb-15 px-10">
     <h2>Filme die dir gefallen könnten</h2>
     <div class="flex items-center justify-start gap-4 overflow-x-hidden pt-4">
-      <SoonInCinemaCard v-if="movies.length > 1" v-for="i in 4" :id="movies[i].movieid" :release="movies[i].releasedate" :title="movies[i].title" class="w-1/4"></SoonInCinemaCard>
+      <SoonInCinemaCard v-if="movies.length > 1" v-for="i in 4" :id="movies[i].movieid" :image="movies[i].poster_path" :release="movies[i].releasedate" :title="movies[i].title" class="w-1/4"></SoonInCinemaCard>
     </div>
   </div>
   <div class="px-10 bg-[var(--color-secondary)] py-5 rounded-t-4xl border-b-1 border-b-[var(--color-primary)]">
@@ -76,7 +76,7 @@ const todayShow = ["18:45", "19:00", "20:45"]
       </div>
     </div>
     <div class="flex items-center justify-start gap-4 pb-4 overflow-x-hidden w-full px-1 pt-3 ">
-      <TodayShows v-if="movies.length > 1" v-for="i in 4" :id="movies[randIndicies[i]].movieid" :title="movies[randIndicies[i]].title" :image="movies[randIndicies[i]].image" :todayShow="todayShow" class="w-1/4"></TodayShows>
+      <TodayShows v-if="movies.length > 1" v-for="i in 4" :id="movies[randIndicies[i]].movieid" :title="movies[randIndicies[i]].title" :image="movies[randIndicies[i]].poster_path" :todayShow="todayShow" class="w-1/4"></TodayShows>
     </div>
   </div>
 </template>

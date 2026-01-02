@@ -4,6 +4,7 @@ import dotenv from "dotenv"
 import jwt from "jsonwebtoken"
 import bcrypt from "bcrypt"
 import cookieParser from "cookie-parser"
+import { pool } from "./db.ts";
 
 dotenv.config();
 const app = express();
@@ -44,12 +45,6 @@ app.get("/api/tmdb/search", async (req, res) => {
     );
     res.status(r.status).send(await r.text());
 });
-
-
-// Test User
-const users = [
-  { id: "u1", email: "test@test.ch", passwordHash: bcrypt.hashSync("test1234", 10), role: "user"}
-];
 
 // Refresh Token Store
 const refreshStore = new Map();
@@ -99,11 +94,18 @@ function authRequired(req, res, next) {
 // Login
 app.post("/api/auth/login", async (req, res) => {
   const { email, password } = req.body ?? {};
-  const user = users.find((u) => u.email === email);
-  if (!user) return res.status(401).json({ message: "Invalid credentials" });
+  const emailNorm = email.trim().toLowerCase();
 
-  const ok = await bcrypt.compare(password ?? "", user.passwordHash);
-  if (!ok) return res.status(401).json({ message: "Invalid credentials" });
+  const r = await pool.query(
+    `SELECT * FROM AppUser WHERE email = $1`,
+    [emailNorm]
+  );
+
+  if (r.rowCount === 0) return res.status(401).json({ message: "Invalid credentials" });
+
+  const user = r.rows[0];
+  const ok = await bcrypt.compare(password, user.password)
+  if(!ok) return res.status(401).json( {message: "Invalid credentials"})
 
   const accessToken = signAccessToken(user);
   const refreshToken = signRefreshToken(user);
@@ -113,12 +115,12 @@ app.post("/api/auth/login", async (req, res) => {
 
   res.json({
     accessToken,
-    user: { id: user.id, email: user.email, role: user.role },
+    user: { id: user.userId, email: user.email }
   });
 });
 
 // Refresh
-app.post("/api/auth/refresh", (req, res) => {
+app.post("/api/auth/refresh", async (req, res) => {
   const rt = req.cookies.refresh_token;
   if (!rt) return res.status(401).json({ message: "No refresh token" });
 
@@ -128,7 +130,12 @@ app.post("/api/auth/refresh", (req, res) => {
     const stored = refreshStore.get(userId);
     if (stored !== rt) return res.status(401).json({ message: "Refresh token revoked" });
 
-    const user = users.find((u) => u.id === userId);
+    const r = await pool.query(
+    `SELECT * FROM AppUser WHERE userId = $1`,
+    [userId]
+    );
+    const user = r.rows[0];
+
     if (!user) return res.status(401).json({ message: "User not found" });
 
     const newAccess = signAccessToken(user);
@@ -154,6 +161,32 @@ app.post("/api/auth/logout", (req, res) => {
 // test endpunkt
 app.get("/api/me", authRequired, (req, res) => {
   res.json({ user: req.user });
+});
+
+// user hinzufügen
+app.post("/api/auth/register", async (req, res) => {
+  const { username, email, password } = req.body ?? {};
+
+  if (!email || !password || !username) return res.status(400).json({ message: "Missing data" });
+  if (password.length < 8) return res.status(400).json({ message: "Password too short" });
+
+  const usernameNorm = username.trim();
+  const emailNorm = email.trim().toLowerCase();
+  const passwordHash = await bcrypt.hash(password, 10);
+
+  try{
+    const r = await pool.query(
+      `INSERT INTO AppUser (name, email, password)
+      VALUES($1, $2, $3)
+      RETURNING UserID, name, email`,
+      [usernameNorm, emailNorm, passwordHash]
+    )
+    res.status(201).json(r.rows[0])
+  }catch(e){
+    if (e.code === "23505") return res.status(409).json({ message: "Email exists" });
+    console.log(e);
+    return res.status(500).json({ message: "register failed" });
+  }
 });
 
 app.listen(process.env.PORT, () => console.log("API ON", process.env.PORT));

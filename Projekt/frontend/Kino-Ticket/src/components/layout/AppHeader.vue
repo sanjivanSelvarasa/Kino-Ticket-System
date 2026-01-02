@@ -1,11 +1,26 @@
 <script lang="ts" setup>
+  import {useAuthStore} from "../../stores/auth.ts";
+  import {ref} from "vue";
+
   const links = new Map<string, string>([
       ["Home", "/"],
       ["Filme", "/movie"],
       ["Programm", "/"],
       ["Warenkorb", "/shoppingcart"],
-      ["Login", "/login"],
   ])
+
+  // is logged in
+  const auth = useAuthStore();
+
+  // logout
+  const error = ref<string | null>();
+  async function logout(){
+    try{
+      await auth.logout();
+    }catch(e: any){
+      error.value = e ?? "Ausloggen nicht möglich";
+    }
+  }
 </script>
 
 <template>
@@ -22,6 +37,20 @@
         </svg>
         {{ key }}
       </RouterLink>
+
+      <RouterLink v-if="!auth.isLoggedIn" class="btn-anim flex items-center justify-center w-[300px] font-normal overflow-hidden py-3 px-4 mx-2 border-0 border-[var(--color-secondary)] whitespace-nowrap" to="/login">
+        <svg>
+          <rect x="0" y="0" width="100%" height="100%" />
+        </svg>
+        Login
+      </RouterLink>
+
+      <button @click="logout" v-if="auth.isLoggedIn" class="cursor-pointer btn-anim flex items-center justify-center w-[300px] font-normal overflow-hidden py-3 px-4 mx-2 border-0 border-[var(--color-secondary)] whitespace-nowrap" to="/">
+        <svg>
+          <rect x="0" y="0" width="100%" height="100%" />
+        </svg>
+        Logout
+      </button>
     </div>
     <div class="flex gap-2">
       <RouterLink to="/" style="border-color: var(--color-secondary);" class="border-2 rounded-full py-3 px-4"><i class="fa-solid fa-magnifying-glass"></i></RouterLink>

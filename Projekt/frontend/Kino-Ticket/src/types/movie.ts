@@ -9,4 +9,5 @@ export type Movie = {
     agerating: number;
     genre: string;
     description: string;
+    poster_path: string | null;
 };

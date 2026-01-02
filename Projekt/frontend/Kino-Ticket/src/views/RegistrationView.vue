@@ -1,6 +1,42 @@
 <script lang="ts" setup>
   import {RouterLink} from "vue-router";
   import InputField from "../components/Login/InputField.vue";
+  import { useAuthStore } from "../stores/auth.ts";
+  import {ref} from "vue";
+  import router from "../router";
+
+  // ref username, email und passwort
+  const username = ref<string>('');
+  const email = ref<string>('');
+  const password = ref<string>('');
+
+  function assignUsername(u: string): void {
+    username.value = u.trim();
+  }
+
+  function assignEmail(e: string): void {
+    email.value = e;
+  }
+
+  function assignPassword(p: string): void {
+    password.value = p;
+  }
+
+  // neuen user registrieren
+  const auth = useAuthStore();
+  const error = ref('');
+  const success = ref<boolean>(false);
+  async function createNewUserFunction() {
+    try{
+      await auth.register(username.value, email.value, password.value);
+    }catch(e: any){
+      error.value = e ?? "Registration fehlgeschlagen"
+    }
+    finally {
+      success.value = true;
+      await router.push(`/`);
+    }
+  }
 </script>
 
 <template>
@@ -25,9 +61,9 @@
         <!--  Input fields-->
         <div>
           <div>
-            <InputField inputName="username" inputType="text" label="Benutzername" placeholder="Max Mustermann"></InputField>
-            <InputField inputName="email" inputType="email" label="E-Mail" placeholder="Max@email.com"></InputField>
-            <InputField inputName="password" inputType="password" label="Passwort" placeholder="123Sicher"></InputField>
+            <InputField @input="assignUsername" inputName="username" inputType="text" label="Benutzername" placeholder="Max Mustermann"></InputField>
+            <InputField @input="assignEmail" inputName="email" inputType="email" label="E-Mail" placeholder="Max@email.com"></InputField>
+            <InputField @input="assignPassword" inputName="password" inputType="password" label="Passwort" placeholder="123Sicher"></InputField>
           </div>
 
           <!-- Angemeldet bleiben -->
@@ -38,7 +74,9 @@
             </div>
           </div>
 
-          <button :style="{ border: 'none' }" style="background-color: var(--color-primary); color: var(--color-primary-text)" class="w-full rounded-xl mt-2"><span class="font-base font-bold">Anmelden</span></button>
+          <p v-if="error" class="text-red-600 py-2">{{ error }}</p>
+
+          <button @click="createNewUserFunction" :style="{ border: 'none' }" style="background-color: var(--color-primary); color: var(--color-primary-text)" class="w-full rounded-xl mt-2"><span class="font-base font-bold">Registrieren</span></button>
 
           <div id="divider" class="my-4 w-full">
             <span class="flex items-center gap-2 uppercase text-xs">oder</span>

@@ -1,7 +1,10 @@
 import { defineStore } from "pinia";
 import { apiFetch, refreshAccessToken } from "../lib/api";
+import {registerApi} from "../api/auth.api.ts";
 
 type User = { id: string; email: string; role?: string };
+
+const base = import.meta.env.VITE_API_BASE;
 
 export const useAuthStore = defineStore("auth", {
     state: () => ({
@@ -12,8 +15,12 @@ export const useAuthStore = defineStore("auth", {
         isLoggedIn: (s) => !!s.accessToken,
     },
     actions: {
+        async register(username: string, email: string, password: string) {
+            await registerApi(username, email, password);
+            await this.login(email, password);
+        },
         async login(email: string, password: string) {
-            const r = await fetch("http://localhost:4000/api/auth/login", {
+            const r = await fetch(`${base}/auth/login`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 credentials: "include",
@@ -29,7 +36,7 @@ export const useAuthStore = defineStore("auth", {
         },
 
         async logout() {
-            await fetch("http://localhost:4000/api/auth/logout", {
+            await fetch(`${base}/auth/logout`, {
                 method: "POST",
                 credentials: "include",
             }).catch(() => {});
@@ -40,7 +47,7 @@ export const useAuthStore = defineStore("auth", {
 
         async loadMe() {
             // user nach reload wieder holen
-            const r = await apiFetch("http://localhost:4000/api/me");
+            const r = await apiFetch(`${base}/me`);
             if (r.ok) {
                 const data = await r.json();
                 this.user = { id: data.user.sub, email: data.user.email, role: data.user.role };

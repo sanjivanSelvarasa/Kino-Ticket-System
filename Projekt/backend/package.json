@@ -5,7 +5,11 @@
     "cors": "^2.8.5",
     "dotenv": "^17.2.3",
     "express": "^5.2.1",
-    "jsonwebtoken": "^9.0.3"
+    "jsonwebtoken": "^9.0.3",
+    "pg": "^8.16.3"
   },
-  "type": "module"
+  "type": "module",
+  "devDependencies": {
+    "@types/pg": "^8.16.0"
+  }
 }

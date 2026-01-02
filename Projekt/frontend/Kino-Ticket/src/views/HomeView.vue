@@ -7,6 +7,8 @@ import SoonInCinemaCard from "../components/Home/SoonInCinemaCard.vue";
 import { moviesRepo } from "../api/moviesRepo";
 import {computed, onMounted, ref} from "vue";
 import type {Movie} from "../types/movie.ts";
+import {useAuthStore} from "../stores/auth.ts";
+import { searchMovies } from "../api/tmdb.api.ts";
 
 const movies = ref<Movie[]>([]);
 const error = ref<string | null>(null);
@@ -43,7 +45,6 @@ let selectedGenre = ref<string>('Drama');
 function selectGenre(genre: string ): void {
   selectedGenre.value = genre;
 }
-
 </script>
 
 <template>
@@ -56,7 +57,7 @@ function selectGenre(genre: string ): void {
 
       <!-- Hero Cards -->
       <section class="w-full flex items-center justify-center gap-4 mb-8">
-        <Card v-for="i in [0,1,2]" v-if="randomIndices.length > 1 && movies.length > randomIndices.length" class="flex-1 w-[544.66px]" :title="movies[randomIndices[i]].title" :rating="movies[randomIndices[i]].rating" :genre="movies[randomIndices[i]].genre" :release="movies[randomIndices[i]].releasedate" :length="movies[randomIndices[i]].length"></Card>
+        <Card v-for="i in [0,1,2]" v-if="randomIndices.length > 1 && movies.length > randomIndices.length" class="flex-1 w-[544.66px]" :image="movies[randomIndices[i]].poster_path" :title="movies[randomIndices[i]].title" :rating="movies[randomIndices[i]].rating" :genre="movies[randomIndices[i]].genre" :release="movies[randomIndices[i]].releasedate" :length="movies[randomIndices[i]].length"></Card>
       </section>
 
       <!-- Tags Section -->
@@ -71,7 +72,7 @@ function selectGenre(genre: string ): void {
             Trending in {{ selectedGenre }}
           </h2>
           <div class="flex items-center justify-start gap-4 pb-4 overflow-x-auto overflow-y-visible pt-4 no-scrollbar">
-            <ShowCard v-for="(item,i) in movies.filter((movie) => movie.genre === selectedGenre)" :title="item.title" :rating="item.rating" :release="item.releasedate" :key="i" class="flex-shrink-0 w-[194.25px]"></ShowCard>
+            <ShowCard v-for="(item,i) in movies.filter((movie) => movie.genre === selectedGenre)" :id="item.movieid" :image="item.poster_path" :title="item.title" :rating="item.rating" :release="item.releasedate" :key="i" class="flex-shrink-0 w-[194.25px]"></ShowCard>
           </div>
         </div>
       </section>
@@ -82,7 +83,7 @@ function selectGenre(genre: string ): void {
           Demnächst im Kino
         </h2>
         <div class="flex items-center justify-start gap-4 pb-4">
-          <SoonInCinemaCard v-if="randomIndices.length > 1 && movies.length > randomIndices.length" v-for="i in [11,12,13,14,15]" :id="movies[i].movieid" :title="movies[i].title" :release="movies[i].releasedate" class="flex-shrink-0 w-[320.4px]"></SoonInCinemaCard>
+          <SoonInCinemaCard v-if="randomIndices.length > 1 && movies.length > randomIndices.length" v-for="i in [11,12,13,14,15]" :image="movies[i].poster_path" :id="movies[i].movieid" :title="movies[i].title" :release="movies[i].releasedate" class="flex-shrink-0 w-[320.4px]"></SoonInCinemaCard>
         </div>
       </section>
     </div>
