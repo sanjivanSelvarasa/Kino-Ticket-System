@@ -2,8 +2,10 @@
 import {onMounted, ref} from "vue";
 import type {Movie} from "../types/movie.ts";
 import {moviesRepo} from "../api/moviesRepo.ts";
+import {cartApi} from "../api/cart.api.ts";
+import {useAuthStore} from "../stores/auth.ts";
 
-  const props = defineProps<{
+const props = defineProps<{
     id: number;
   }>()
 
@@ -53,24 +55,39 @@ import {moviesRepo} from "../api/moviesRepo.ts";
     seats.value.push(seat);
   }
 
-  function calcSeatPrice(){
+  function calcSeatPrice(seat: string) : number{
+      const char = seat.charAt(0).toUpperCase()
+      if(char === 'A' || char === 'B' || char === 'C')
+        return 25;
+      if(char === 'D' || char === 'E' || char === 'F' || char === 'G')
+        return 35;
+      if(char === 'H' || char === 'I' || char === 'J')
+        return 45;
+  }
+
+  function calcAllSeatPrice(){
     let price : number = 0;
     for(let i = 0; i < seats.value.length; i++){
       const char = seats.value[i].charAt(0).toUpperCase()
-      if(char === 'A' || char === 'B' || char === 'C'){
+      if(char === 'A' || char === 'B' || char === 'C')
         price += 25;
-      }
-      if(char === 'D' || char === 'E' || char === 'F' || char === 'G'){
+      if(char === 'D' || char === 'E' || char === 'F' || char === 'G')
         price += 35;
-      }
-      if(char === 'H' || char === 'I' || char === 'J'){
+      if(char === 'H' || char === 'I' || char === 'J')
         price += 45;
-      }
     }
     return price;
   }
 
   const isActive = (seat: string) => seats.value.includes(seat);
+
+  async function addToCart() {
+      try{
+        await cartApi.createCart(props.id, seats.value[0], '14:45:00', calcSeatPrice(seats.value[0]));
+      } catch(e: any){
+        console.error(e.message);
+      }
+  }
 
 </script>
 
@@ -145,11 +162,11 @@ import {moviesRepo} from "../api/moviesRepo.ts";
           <span v-if="!(seats.length === 0)" class="text-sm">Ausgewählte Sitze:
             <span v-for="(item, i) in seats">{{ item }}, </span>
           </span>
-          <span class="text-2xl font-bold">Gesamt: {{ calcSeatPrice() }} CHF</span>
+          <span class="text-2xl font-bold">Gesamt: {{ calcAllSeatPrice() }} CHF</span>
         </div>
         <div class="flex items-center justify-center w-fit gap-4 flex-row">
-          <button class="cursor-pointer text-md bg-[var(--color-normal-text)] text-[var(--color-primary-text)] px-6 py-4 font-bold rounded-full">Speichern</button>
-          <button class="cursor-pointer text-md bg-[var(--color-primary)] text-[var(--color-primary-text)] px-6 py-4 font-bold rounded-full">Bestätigen & Zahlen</button>
+          <RouterLink to="/movie" @click="addToCart" class="cursor-pointer text-md bg-[var(--color-normal-text)] text-[var(--color-primary-text)] px-6 py-4 font-bold rounded-full">Speichern</RouterLink>
+          <RouterLink to="/shoppingcart" @click="addToCart" class="cursor-pointer text-md bg-[var(--color-primary)] text-[var(--color-primary-text)] px-6 py-4 font-bold rounded-full">Bestätigen & Zahlen</RouterLink>
         </div>
       </div>
     </div>

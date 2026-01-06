@@ -51,7 +51,7 @@ const refreshStore = new Map();
 
 function signAccessToken(user){
   return jwt.sign(
-    { sub: user.id, email: user.email, role: user.role },
+    { sub: user.userid, email: user.email, role: user.role },
     process.env.JWT_ACCESS_SECRET,
     { expiresIn: process.env.ACCESS_EXPIRES || "10m" }
   );
@@ -59,7 +59,7 @@ function signAccessToken(user){
 
 function signRefreshToken(user){
   return jwt.sign(
-    {sub: user.id },
+    {sub: user.userid },
     process.env.JWT_REFRESH_SECRET,
     { expiresIn: process.env.REFRESH_EXPIRES || "30m" }
   );
@@ -189,4 +189,173 @@ app.post("/api/auth/register", async (req, res) => {
   }
 });
 
+// room
+app.post("/api/room", async (req, res) => {
+  const { name } = req.body ?? {};
+  
+  if (!name) return res.status(400).json({message: "Missing Data"});
+
+  try{
+    const r = await pool.query(
+      `INSERT INTO Room (name)
+      VALUES ($1)
+      RETURNING *`,
+      [name]
+    )
+    return res.status(200).json(rows[0]);
+  }
+  catch(e){ 
+      return res.status(500).json({message: "Room failed"})
+    }
+})
+
+app.get("/api/room", async (req, res) => {
+  const qs = new URLSearchParams(req.query).toString();
+  const url = `${PGRST}/room?select=*${qs ? "&" + qs : ""}`;
+
+  const r = await fetch(url);
+  res.status(r.status).send(await r.text());
+})
+
+// show
+app.post("/api/show", async (req, res) => {
+  const {movieId, roomId, startTime, price } = req.body ?? {};
+  
+  if(!movieId || !roomId || !startTime || !price) return res.status(400).json({ message: "Missing Data"})
+  
+  try{
+    const r = await pool.query(
+      `INSERT INTO Show (fk_movie_id, fk_room_id, start_time, price)
+      VALUES ($1, $2, $3, $4)
+      RETURNING *`
+      [movieId, roomId, startTime, price]
+    )
+    return res.status(200).json(r.rows[0])
+  }catch(e){
+    return res.status(500).json({ message: "Show failed!"})
+  }
+})
+
+app.get("/api/show", async (req, res) => {
+  const qs = new URLSearchParams(req.query).toString();
+  const url = `${PGRST}/show?select=*${qs ? '&' + qs : ''}`
+
+  const r = await fetch(url);
+  return res.status(r.status).send(await r.text());
+})
+
+// ticket
+app.post("/api/ticket", async (req, res) => {
+  const { showId, userId} = req.body ?? {};
+
+  if(!showId || !userId) return res.status(400).json({message: "Missing Data"});
+
+  try{
+    const r = await pool.query(
+      `INSERT INTO Ticket (fk_showID, fk_userID)
+      VALUES($1, $2)
+      RETURNING *`,
+      [showId, userId]
+    )
+    return res.status(200).json(r.rows[0])
+  }catch(e){
+    return res.status(500).json({message: "ticket failed"})
+  }
+})
+
+app.get("/api/ticket", async (req, res) => {
+  const qs = new URLSearchParams(req.query).toString();
+  const url = `${PGRST}/ticket?select=*${qs ? '&' + qs : ''}`
+
+  const r = await fetch(url);
+  return res.status(r.status).send(await r.text());
+})
+
+function requireAuth(req, res, next) {
+  const header = req.headers.authorization;
+  if (!header?.startsWith("Bearer ")) return res.status(401).json({ message: "Missing token" });
+
+  const token = header.slice("Bearer ".length);
+  try {
+    const payload = jwt.verify(token, process.env.JWT_ACCESS_SECRET);
+    req.user = payload;
+    next();
+  } catch (e) {
+    return res.status(401).json({ message: "Invalid/expired token" });
+  }
+}
+
+app.post("/api/cart", requireAuth, async (req, res) => {
+  const userId = req.user.sub;
+  const { movieId, roomName, startTime, price } = req.body ?? {};
+
+  if( !movieId || userId == null || !roomName || !startTime || price == null) return res.status(400).json({message: "Missing data"})
+
+  const client = await pool.connect();
+
+  try{
+    await client.query("BEGIN");
+
+    const r = await client.query(
+      `INSERT INTO Room (name)
+      VALUES ($1)
+      RETURNING RoomID`,
+      [roomName]
+    )
+
+    const roomId = r.rows[0].roomid;
+  
+    const s = await client.query(
+      `INSERT INTO Show (fk_movie_id, fk_room_id, start_time, price)
+      VALUES ($1, $2, $3, $4)
+      RETURNING ShowID`,
+      [movieId, roomId, startTime, price]
+    )
+
+    const showId = s.rows[0].showid;
+
+    const t = await client.query(
+      `INSERT INTO Ticket (fk_showID, fk_userID)
+      VALUES ($1, $2)
+      RETURNING TicketID`,
+      [showId, userId]
+    )
+    
+    await client.query("COMMIT");
+    return res.status(201).json({
+      roomId, 
+      showId, 
+      ticketId: t.rows[0].ticketid})
+  }catch(e){
+    await client.query("ROLLBACK");
+    return res.status(500).json({ message: e.message || 'Insert cart failed'})
+  }finally{
+    client.release();
+  }
+})
+
+app.get("/api/cart", requireAuth, async (req, res) => {
+
+  const userId = req.user.sub;
+
+  try{
+    const r = await pool.query(
+      `
+      SELECT * FROM Ticket
+      INNER JOIN Show s ON Ticket.fk_showID = s.ShowID
+      INNER JOIN AppUser ON Ticket.fk_userID = AppUser.UserID
+      INNER JOIN Movie ON s.fk_movie_id = Movie.MovieID
+      INNER JOIN Room ON s.fk_room_id = Room.RoomID
+      WHERE AppUser.UserID = $1
+      `,
+      [userId]
+    );
+    res.status(200).json(r.rows)
+  }catch(e){
+    res.status(500).json({ message: "get cart failed"})
+  }
+
+})
+
+// listen
 app.listen(process.env.PORT, () => console.log("API ON", process.env.PORT));
