@@ -8,6 +8,7 @@ import AdminView from "../views/AdminView.vue";
 import BuyTickets from "../views/BuyTickets.vue";
 import RegistrationView from "../views/RegistrationView.vue";
 import ShoppingCart from "../views/ShoppingCart.vue";
+import SearchBar from "../views/SearchView.vue";
 
 const routes = [
     {
@@ -53,6 +54,11 @@ const routes = [
         name: 'shoppingcart',
         component: ShoppingCart,
         meta: { requiresAuth: true }
+    },
+    {
+        path: '/search',
+        name: 'search',
+        component: SearchBar
     }
 ]
 

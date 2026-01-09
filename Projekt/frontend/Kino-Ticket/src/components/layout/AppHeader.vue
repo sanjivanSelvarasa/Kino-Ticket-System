@@ -53,7 +53,7 @@
       </button>
     </div>
     <div class="flex gap-2">
-      <RouterLink to="/" style="border-color: var(--color-secondary);" class="border-2 rounded-full py-3 px-4"><i class="fa-solid fa-magnifying-glass"></i></RouterLink>
+      <RouterLink to="/search" style="border-color: var(--color-secondary);" class="border-2 rounded-full py-3 px-4"><i class="fa-solid fa-magnifying-glass"></i></RouterLink>
       <RouterLink to="/movie" style="background: var(--color-secondary); color: var(--color-secondary-text)" class="py-3 px-6 rounded-full text-base font-semibold">Tickets Kaufen</RouterLink>
     </div>
   </div>

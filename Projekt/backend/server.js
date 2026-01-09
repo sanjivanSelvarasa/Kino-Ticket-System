@@ -9,7 +9,7 @@ import { pool } from "./db.ts";
 dotenv.config();
 const app = express();
 app.use(cors({
-  origin: "http://localhost:5174", // Frontend-Origin
+  origin: "http://localhost:5173", // Frontend-Origin
   credentials: true
 }));
 app.use(express.json());

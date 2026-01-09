@@ -13,6 +13,7 @@ services:
       - "5432:5432"
     volumes:
       - db_data:/var/lib/postgresql/data
+      - ./db:/docker-entrypoint-initdb.d:ro
  
   postgrest:
     image: postgrest/postgrest:v13.0.4
