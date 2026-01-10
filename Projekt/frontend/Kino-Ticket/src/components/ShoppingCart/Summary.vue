@@ -1,9 +1,12 @@
 <script lang="ts" setup>
 const props = defineProps<{
-  id: string,
   artical: number,
   price: number,
 }>()
+
+function doAlert(){
+  alert('Du hast die Tickets gekauft');
+}
 </script>
 
 <template>
@@ -11,8 +14,8 @@ const props = defineProps<{
     <h3 class="text-2xl font-bold">Zusammenfassung</h3>
     <div class="w-full flex justify-between items-start flex-col gap-3">
       <div class="w-full flex justify-between items-center gap-1">
-        <span>Artikel (4)</span>
-        <span>45.50 CHF</span>
+        <span>Artikel ({{ props.artical }})</span>
+        <span>{{ props.price }} CHF</span>
       </div>
       <div class="w-full flex justify-between items-center gap-1">
         <span>Buchungsgebühr</span>
@@ -22,9 +25,9 @@ const props = defineProps<{
     <hr style="margin: 0;" class="border-t-2 border-b-red-500 w-full">
     <div class="flex justify-between items-center w-full">
       <span class="text-xl font-bold">Gesamt</span>
-      <span>48.00 CHF</span>
+      <span>{{ props.price + 2.5}} CHF</span>
     </div>
-    <button class="cursor-pointer w-full rounded-lg bg-[var(--color-primary)] px-4 py-4 font-bold text-md">Zur Kasse</button>
+    <button @click="doAlert" class="cursor-pointer w-full rounded-lg bg-[var(--color-primary)] px-4 py-4 font-bold text-md border-2 border-[var(--color-primary)] hover:bg-[var(--color-secondary)] hover:text-[var(--color-secondary-text)] transition-all duration-200">Zur Kasse</button>
   </div>
 </template>
 

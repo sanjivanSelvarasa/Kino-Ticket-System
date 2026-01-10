@@ -68,3 +68,13 @@ hr{
     transform: translateY(-8px);
     scale: 1.01;
 }
+
+.fade-slide-enter-active,
+.fade-slide-leave-active {
+    transition: opacity .5s ease, transform .5s ease;
+}
+.fade-slide-enter-from,
+.fade-slide-leave-to {
+    opacity: 0;
+    transform: translateY(8px);
+}

@@ -8,8 +8,8 @@
 </script>
 
 <template>
-  <RouterLink :to="{ name: 'movieDetail', params: { id: props.id}}" class="cursor-pointer aspect-[4/3] bg-[var(--color-secondary)] border-2 border-[var(--color-primary)] rounded-xl overflow-hidden hover-up">
-    <div class="mb-2 w-full h-[150px] bg-center bg-cover" :style="{ backgroundImage: `url(${props.image})`}"></div>
+  <RouterLink :to="{ name: 'movieDetail', params: { id: props.id}}" class="flex flex-col justify-between gap-2 text-xl cursor-pointer aspect-[16/9] bg-[var(--color-secondary)] border-2 border-[var(--color-primary)] rounded-xl overflow-hidden hover-up">
+    <div class="mb-2 w-full h-[300px] bg-center bg-cover" :style="{ backgroundImage: `url(${props.image})`}"></div>
     <div class="px-4 py-4">
       <p class="font-bold pb-2">{{ props.title }}</p>
       <div class="flex items-center justify-start gap-2 overflow-x-hidden w-full text-xs">

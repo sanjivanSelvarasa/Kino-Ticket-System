@@ -3,8 +3,8 @@
 
 <template>
   <div style="background-color: var(--color-secondary); color: var(--color-secondary-text)" class="flex justify-between items-center w-full py-10 px-10">
-    <div>
-      <h2 style="color: var(--color-secondary-text)" class="font-bold">Kino Gold</h2>
+    <div class="flex items-center justify-center bg-[var(--color-primary)] rounded-md">
+      <img src="../../assets/images/logo.png" alt="logo" class="w-[200px] max-h-[80px] object-cover" />
     </div>
     <div class="flex justify-between gap-6 py-10 px-6">
       <RouterLink class="" to="/">Impressum</RouterLink>

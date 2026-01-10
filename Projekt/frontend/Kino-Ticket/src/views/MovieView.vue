@@ -82,8 +82,10 @@ function scrollRight(index: number){
       <button v-if="canScrollLeft[i]" @click="scrollLeft(i)" class="cursor-pointer absolute left-2 top-[50%] translate-y-[-50%] border-4 border-[var(--color-primary)] w-[55px] h-[55px] rounded-full bg-[var(--color-secondary)] z-5 hover:bg-[var(--color-primary)] hover:border-[var(--color-secondary)] hover:text-[var(--color-primary-text)] transition-all duration-300"><i class="fa-solid fa-arrow-left"></i></button>
       <section class="mb-15">
         <h2 style="color: var(--color-primary-text)" class="font-bold text-2xl mb-5">{{uniqueGenre[i]}}</h2>
-        <div :ref="el => setRowRef(el as HTMLElement | null, i)" class="flex items-center justify-start gap-4 w-full overflow-auto no-scrollbar pt-4">
-          <ShowCase v-for="item in movies.filter((movie) => movie.genre === uniqueGenre[i])" :key="item.movieid" :id="item.movieid" :title="item.title" :image="item.poster_path" :rating="item.rating" :genre="item.genre" :length="item.length"></ShowCase>
+        <div :ref="el => setRowRef(el as HTMLElement | null, i)">
+          <TransitionGroup name="fade-slide" tag="div" appear class="flex items-center justify-start gap-4 w-full overflow-auto no-scrollbar pt-4">
+            <ShowCase :style="{ transitionDelay: `${i * 80}ms` }" v-for="item in movies.filter((movie) => movie.genre === uniqueGenre[i])" :key="item.movieid" :id="item.movieid" :title="item.title" :image="item.poster_path" :rating="item.rating" :genre="item.genre" :length="item.length"></ShowCase>
+          </TransitionGroup>
         </div>
       </section>
       <button v-if="canScrollRight[i]" @click="scrollRight(i)" class="cursor-pointer absolute right-2 top-[50%] translate-y-[-50%] border-4 border-[var(--color-primary)] w-[55px] h-[55px] rounded-full bg-[var(--color-secondary)] hover:bg-[var(--color-primary)] hover:border-[var(--color-secondary)] hover:text-[var(--color-primary-text)] transition-all duration-300"><i class="fa-solid fa-arrow-right"></i></button>

@@ -5,7 +5,6 @@
   const links = new Map<string, string>([
       ["Home", "/"],
       ["Filme", "/movie"],
-      ["Programm", "/"],
       ["Warenkorb", "/shoppingcart"],
   ])
 
@@ -26,9 +25,9 @@
 <template>
   <div id="header" style="font-family: var(--font-family-base), 'Droid Sans'; background-color: var(--color-primary)" class="fixed top-0 left-0 flex items-center justify-between w-full px-10 py-6 text-black z-50">
     <div class="">
-      <div class="flex justify-between align-middle w-30 h-10">
-        <img src="#" alt="logo">
-      </div>
+      <RouterLink to="/" class="flex justify-between align-middle w-30">
+        <img src="../../assets/images/logo.png" alt="logo" class="w-full h-10 object-cover">
+      </RouterLink>
     </div>
     <div class="flex flex-row w-lg ">
       <RouterLink v-for="[key, value] in links" class="btn-anim flex items-center justify-center w-[300px] font-normal overflow-hidden py-3 px-4 mx-2 border-0 border-[var(--color-secondary)] whitespace-nowrap" :to="value">
@@ -53,8 +52,8 @@
       </button>
     </div>
     <div class="flex gap-2">
-      <RouterLink to="/search" style="border-color: var(--color-secondary);" class="border-2 rounded-full py-3 px-4"><i class="fa-solid fa-magnifying-glass"></i></RouterLink>
-      <RouterLink to="/movie" style="background: var(--color-secondary); color: var(--color-secondary-text)" class="py-3 px-6 rounded-full text-base font-semibold">Tickets Kaufen</RouterLink>
+      <RouterLink to="/search" class="border-[var(--color-secondary)] border-2 rounded-full py-3 px-4 hover:bg-[var(--color-secondary)] hover:text-[var(--color-secondary-text)] transition-all duration-200"><i class="fa-solid fa-magnifying-glass"></i></RouterLink>
+      <RouterLink to="/movie" class="py-3 px-6 text-[var(--color-secondary-text)] text-nowrap rounded-full text-base font-semibold border-2 bg-[var(--color-secondary)] hover:bg-[var(--color-primary)] border-[var(--color-secondary)] hover:text-[var(--color-primary-text)] transition-all duration-200">Tickets Kaufen</RouterLink>
     </div>
   </div>
 </template>

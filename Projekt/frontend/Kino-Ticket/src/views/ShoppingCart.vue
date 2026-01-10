@@ -18,6 +18,8 @@ onMounted( async () => {
         poster_image: await searchMovies(item.image),
       }))
     );
+
+    console.log(cart.value)
   }catch(e: any){
     error.value = e.message || 'Warenkorb laden schiefgelaufen';
     console.error(error.value);
@@ -28,13 +30,19 @@ onMounted( async () => {
 </script>
 
 <template>
-  <div class="w-fit mx-auto my-30">
+  <div class="w-fit mx-auto my-30 min-h-screen">
     <h1 style="font-size: 50px" class="text-center">Warenkorb</h1>
-      <div class="flex justify-between items-start gap-4">
-      <div class="flex flex-col justify-center items-center gap-5">
-        <Item v-if="!loading" v-for="i in cart" :image="i.poster_image" :title="i.title" :date="i.date" :time="i.time" :seat="i.name" :price="i.price"></Item>
+      <div class="flex justify-between items-start gap-4 mx-2 max-lg:flex-col-reverse">
+        <div class="flex flex-col justify-center items-center gap-5">
+          <Item v-if="!loading" v-for="i in cart" :image="i.poster_image" :title="i.title" :date="i.date" :time="i.start_time" :seat="i.name" :price="i.price"></Item>
+        </div>
+        <Summary v-if="!loading && cart.length !== 0" :artical="cart.length" :price="cart.reduce((acc, item) =>  acc + Number(item.price), 0)" class="max-lg:w-full"></Summary>
       </div>
-      <Summary v-if="!loading" id="1" artical="3" price="3"></Summary>
+    <div v-if="cart.length === 0"  class="flex justify-center items-center gap-2 text-xl flex-nowrap w-full h-1/2">
+      <div class="flex justify-center items-center">
+        <i class="fa-solid fa-cart-shopping"></i>
+      </div>
+      <p>Warenkorb leer</p>
     </div>
   </div>
 </template>

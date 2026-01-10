@@ -15,7 +15,7 @@
     <div class="flex items-center flex-col justify-start w-full p-2">
       <p class="w-full text-start text-base font-semibold whitespace-nowrap">{{ props.title }}</p>
       <div class="flex items-center justify-start w-full gap-2">
-        <div class="text-amber-300 flex gap-1">
+        <div class=" flex gap-1">
           <div class="flex items-center justify-center text-[10px]">
             <i class="fa-solid fa-star"></i>
           </div>

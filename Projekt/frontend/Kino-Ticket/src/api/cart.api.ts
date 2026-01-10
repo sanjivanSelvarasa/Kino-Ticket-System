@@ -40,5 +40,9 @@ export const cartApi = {
                 ...(auth.accessToken ? { Authorization: `Bearer ${auth.accessToken}` } : {}),
             }
         });
+    },
+
+    async deleteCart(movieId: number, roomName: string, startTime: string) : Promise<any> {
+
     }
 }

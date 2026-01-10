@@ -27,8 +27,8 @@ DROP TABLE IF EXISTS Ticket, AppUser, Show, Room, ProgramTime, Movie CASCADE;
 
         CREATE TABLE IF NOT EXISTS Show(
             ShowID INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-            fk_movie_id INT NOT NULL REFERENCES Movie(MovieID),
-            fk_room_id INT NOT NULL REFERENCES Room(RoomID),
+            fk_movie_id INT NOT NULL REFERENCES Movie(MovieID) ON DELETE CASCADE ,
+            fk_room_id INT NOT NULL REFERENCES Room(RoomID) ON DELETE CASCADE,
             start_time TIME NOT NULL,
             price DECIMAL(5,2) NOT NULL
         );
@@ -43,6 +43,6 @@ DROP TABLE IF EXISTS Ticket, AppUser, Show, Room, ProgramTime, Movie CASCADE;
 
         CREATE TABLE IF NOT EXISTS Ticket(
             TicketID INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-            fk_showID INT NOT NULL REFERENCES Show(ShowID),
-            fk_userID INT NOT NULL REFERENCES AppUser(UserID)
+            fk_showID INT NOT NULL REFERENCES Show(ShowID) ON DELETE CASCADE,
+            fk_userID INT NOT NULL REFERENCES AppUser(UserID) ON DELETE CASCADE
         );

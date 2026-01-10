@@ -1,5 +1,6 @@
 <script lang="ts" setup>
   const props = defineProps<{
+    id: number,
     title: string,
     rating: number,
     genre: string,
@@ -10,7 +11,7 @@
 </script>
 
 <template>
-  <div id="card" :style="{ backgroundImage: `url(${image})` }" class="brightness-90 cursor-pointer flex flex-col justify-around gap-3 rounded-4xl px-6 py-6 text-[var(--color-normal-text)] shadow-2xl aspect-video overflow-hidden hover-up">
+  <RouterLink :to="{name: 'movieDetail', params: { id: props.id}}" id="card" :style="{ backgroundImage: `url(${image})` }" class="bg-cover brightness-90 cursor-pointer flex flex-col justify-around gap-3 rounded-4xl px-6 py-6 text-[var(--color-normal-text)] shadow-2xl aspect-video overflow-hidden hover-up">
     <div class="backdrop-blur-lg ml-auto flex items-center justify-center w-fit px-4 py-2 rounded-full bg-[var(--color-transparent-text)] hover:bg-[var(--color-primary)] transition-all duration-200">
       <i class="fa-solid fa-star"></i>
       <p class="ml-1">{{ props.rating}}</p>
@@ -31,5 +32,5 @@
       </div>
       <p class="ml-4 mr-4 font-bold">Jetzt abspielen</p>
     </div>
-  </div>
+  </RouterLink>
 </template>

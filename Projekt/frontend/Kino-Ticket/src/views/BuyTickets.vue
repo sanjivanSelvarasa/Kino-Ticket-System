@@ -81,9 +81,16 @@ const props = defineProps<{
 
   const isActive = (seat: string) => seats.value.includes(seat);
 
-  async function addToCart() {
+  async function repeatAddToCart(){
+    for(let i = 0; i < seats.value.length; i++){
+      await addToCart(props.id, seats.value[i], '14:45:00', calcSeatPrice(seats.value[i]));
+    }
+  }
+
+  async function addToCart(id: number, seat: string, time: string, price: number) {
+      if(seats.value.length === 0) return;
       try{
-        await cartApi.createCart(props.id, seats.value[0], '14:45:00', calcSeatPrice(seats.value[0]));
+        await cartApi.createCart(id, seat, time, price);
       } catch(e: any){
         console.error(e.message);
       }
@@ -165,8 +172,8 @@ const props = defineProps<{
           <span class="text-2xl font-bold">Gesamt: {{ calcAllSeatPrice() }} CHF</span>
         </div>
         <div class="flex items-center justify-center w-fit gap-4 flex-row">
-          <RouterLink to="/movie" @click="addToCart" class="cursor-pointer text-md bg-[var(--color-normal-text)] text-[var(--color-primary-text)] px-6 py-4 font-bold rounded-full">Speichern</RouterLink>
-          <RouterLink to="/shoppingcart" @click="addToCart" class="cursor-pointer text-md bg-[var(--color-primary)] text-[var(--color-primary-text)] px-6 py-4 font-bold rounded-full">Bestätigen & Zahlen</RouterLink>
+          <RouterLink to="/movie" @click="repeatAddToCart" class="cursor-pointer text-md bg-[var(--color-normal-text)] text-[var(--color-primary-text)] px-6 py-4 font-bold rounded-full">Speichern</RouterLink>
+          <RouterLink to="/shoppingcart" @click="repeatAddToCart" class="cursor-pointer text-md bg-[var(--color-primary)] text-[var(--color-primary-text)] px-6 py-4 font-bold rounded-full">Bestätigen & Zahlen</RouterLink>
         </div>
       </div>
     </div>

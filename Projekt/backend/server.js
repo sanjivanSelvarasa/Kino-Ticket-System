@@ -110,7 +110,8 @@ app.post("/api/auth/login", async (req, res) => {
   const accessToken = signAccessToken(user);
   const refreshToken = signRefreshToken(user);
 
-  refreshStore.set(user.id, refreshToken);
+  const key = String(user.userid);
+  refreshStore.set(key, refreshToken);
   setRefreshCookie(res, refreshToken);
 
   res.json({
@@ -126,7 +127,7 @@ app.post("/api/auth/refresh", async (req, res) => {
 
   try {
     const payload = jwt.verify(rt, process.env.JWT_REFRESH_SECRET);
-    const userId = payload.sub;
+    const userId = String(payload.sub);
     const stored = refreshStore.get(userId);
     if (stored !== rt) return res.status(401).json({ message: "Refresh token revoked" });
 
@@ -355,6 +356,21 @@ app.get("/api/cart", requireAuth, async (req, res) => {
     res.status(500).json({ message: "get cart failed"})
   }
 
+})
+
+app.delete('/api/cart', (req, res) => {
+  const { movieId, roomName, startTime} = req.body ?? {};
+
+  if(!movieId || !roomName || !startTime) return res.status(400).json({ message: 'fehlende Daten'});
+
+  try{
+    const r = await pool.query(
+      `
+        DELETE FROM Ticket 
+        WHERE 
+      `
+    )
+  }
 })
 
 // listen
