@@ -62,17 +62,19 @@ onBeforeUnmount(() => {
   window.removeEventListener("resize", onResize);
 });
 
-const showHeroCards = computed(() => Math.floor(viewPortView.value / 544.66));
+const showHeroCards = computed(() => Math.min(3,Math.floor(viewPortView.value / 544.66)));
 
-const showCommingSoonCards = computed(() => Math.floor(viewPortView.value / 320.4));
+const showComingSoonCards = computed(() => Math.min(5, Math.floor(viewPortView.value / 320.4)));
 
 </script>
 
 <template>
   <div class="overflow-x-hidden">
   <div class="min-h-screen">
-    <div class="min-h-screen flex items-center justify-center text-2xl">
-      <p>Platzhalter für Animation danach!</p>
+    <div class="mt-30 mx-auto mb-4 border-8 border-[var(--color-secondary)] rounded-lg w-8/10 max-2xl:w-full">
+      <video autoplay muted loop class=" aspect-video w-full">
+        <source src="../assets/video/landingpageAnim.mp4" type="video/mp4" />
+      </video>
     </div>
     <div class="max-w-[1714px] w-full mx-auto my-4 px-6 py-4 rounded-2xl bg-amber-200">
       <SearchBar></SearchBar>
@@ -108,7 +110,7 @@ const showCommingSoonCards = computed(() => Math.floor(viewPortView.value / 320.
           Demnächst im Kino
         </h2>
         <div class="flex items-center justify-start gap-4 pb-4">
-          <SoonInCinemaCard v-if="randomIndices.length > 1 && movies.length > randomIndices.length" v-for="i in showCommingSoonCards" :image="movies[i].poster_path" :id="movies[i].movieid" :title="movies[i].title" :release="movies[i].releasedate" class="min-w-[320.4px] max-w-full flex-1"></SoonInCinemaCard>
+          <SoonInCinemaCard v-if="randomIndices.length > 1 && movies.length > randomIndices.length" v-for="i in showComingSoonCards" :image="movies[i].poster_path" :id="movies[i].movieid" :title="movies[i].title" :release="movies[i].releasedate" class="min-w-[320.4px] max-w-full flex-1"></SoonInCinemaCard>
           <Loading v-if="loading"></Loading>
         </div>
       </section>

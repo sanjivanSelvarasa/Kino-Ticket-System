@@ -17,7 +17,8 @@
 </script>
 
 <template>
-  <header style="font-family: 'Bebas Neue', sans-serif;" class="mt-10 flex items-center justify-between flex-row-reverse px-10 min-h-screen tracking-wider gap-10 max-xl:flex-col-reverse">
+  <div class="w-screen flex justify-center items-center">
+  <header style="font-family: 'Bebas Neue', sans-serif;" class="mt-10 flex items-center justify-between flex-row-reverse px-10 min-h-screen tracking-wider gap-40 max-w-[1700px] max-xl:flex-col-reverse">
     <TransitionGroup name="fade-slide" tag="div" appear>
       <div key="image" :style="{ backgroundImage: `url(${props.image})`, transitionDelay: `${0 * 80}ms`}" class="bg-right bg-cover aspect-square border-6 border-[var(--color-secondary)] rounded-2xl h-[40rem] max-md:w-full"></div>
     </TransitionGroup>
@@ -72,6 +73,7 @@
       </div>
     </TransitionGroup>
   </header>
+  </div>
 </template>
 
 <style scoped>

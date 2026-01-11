@@ -83,9 +83,8 @@ const visibleMovies = computed(() =>
 </script>
 
 <template>
-  <Hero v-if="selectedMovie?.movieid" :id="selectedMovie.movieid" :image="selectedMovie.poster_path" :title="selectedMovie.title" :awards="selectedMovie.awards" :rating="selectedMovie.rating" :releaseDate="selectedMovie.releasedate" :length="selectedMovie.length" :ageRating="selectedMovie.agerating" :genre="selectedMovie.genre" :description="selectedMovie.description"></Hero>
-  <Loading v-if="loading"></Loading>
-
+    <Hero v-if="selectedMovie?.movieid" :id="selectedMovie.movieid" :image="selectedMovie.poster_path" :title="selectedMovie.title" :awards="selectedMovie.awards" :rating="selectedMovie.rating" :releaseDate="selectedMovie.releasedate" :length="selectedMovie.length" :ageRating="selectedMovie.agerating" :genre="selectedMovie.genre" :description="selectedMovie.description"></Hero>
+    <Loading v-if="loading"></Loading>
   <div class="pb-15 px-10">
     <h2>Filme die dir gefallen könnten</h2>
     <div ref="container" class="grid gap-4 pt-4 overflow-hidden grid-flow-col auto-cols-[minmax(420px,1fr)]">
