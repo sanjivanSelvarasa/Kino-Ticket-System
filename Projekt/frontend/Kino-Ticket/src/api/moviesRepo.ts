@@ -5,7 +5,7 @@ import { searchMovies} from "./tmdb.api.ts";
 export const moviesRepo = {
 
     getAllMovies(): Promise<Movie[]> {
-        return http<Movie[]>('/movie?order=title.asc')
+        return http<Movie[]>('/movie')
             .then(rows => {
                     const mapped = rows.map(async r => ({
                         ...r,
@@ -16,7 +16,7 @@ export const moviesRepo = {
             });
     },
     getById(id: number): Promise<Movie> {
-        return http<Movie[]>(`/movie?movieid=eq.${id}`)
+        return http<Movie[]>(`/movie/${id}`)
             .then(async rows => {
                 if (rows.length === 0) {
                     throw new Error(`No movie with id ${id}`);

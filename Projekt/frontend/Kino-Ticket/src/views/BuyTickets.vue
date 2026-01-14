@@ -1,9 +1,13 @@
 <script lang="ts" setup>
-import {onMounted, ref} from "vue";
+import {computed, onMounted, ref, watch} from "vue";
 import type {Movie} from "../types/movie.ts";
 import {moviesRepo} from "../api/moviesRepo.ts";
 import {cartApi} from "../api/cart.api.ts";
 import {useAuthStore} from "../stores/auth.ts";
+import router from "../router";
+import { roomsApi } from "../api/rooms.api.ts";
+import {an} from "vue-router/dist/router-CWoNjPRp";
+import * as sea from "node:sea";
 
 const props = defineProps<{
     id: number;
@@ -12,7 +16,6 @@ const props = defineProps<{
   const movie = ref<Movie>();
   const error = ref<string | null>(null);
   const loading = ref<boolean>(true);
-
 
   onMounted(async () => {
     try {
@@ -28,6 +31,8 @@ const props = defineProps<{
 
   // current Date
   const date = new Date();
+  const chosenTime = ref<string>('');
+  const chosenDate = ref<Date | null>(null);
   const countNextDay = 6;
   const nextDates = getNextDays(date,countNextDay);
 
@@ -39,6 +44,31 @@ const props = defineProps<{
       nextDays.push(d);
     }
     return nextDays;
+  }
+
+  const seatsOccupied  = ref<string[]>([]);
+  watch(
+      [() => movie.value?.movieid, () => chosenDate.value, () => chosenTime.value],
+      async ([movieId, date, time]) => {
+        error.value = null;
+
+        if (!movieId) { error.value = "Keine MovieId gefunden"; seatsOccupied.value = []; return; }
+        if (!time)    { error.value = "Keine Zeit gefunden";   seatsOccupied.value = []; return; }
+        if (!date)    { error.value = "Kein Datum gefunden";   seatsOccupied.value = []; return; }
+
+        try {
+          const seats = await roomsApi.getRoomById(movieId.toString(), date, time);
+          seatsOccupied.value = seats.map((r: any) => r.name);
+        } catch (e: any) {
+          error.value = e.message ?? "Fehler beim Laden";
+          seatsOccupied.value = [];
+        }
+      },
+      { immediate: true }
+  );
+
+  function isOccupied(seat: string) : boolean{
+    return seatsOccupied.value.includes(seat);
   }
 
   // choosen Seats
@@ -83,18 +113,40 @@ const props = defineProps<{
 
   async function repeatAddToCart(){
     for(let i = 0; i < seats.value.length; i++){
-      await addToCart(props.id, seats.value[i], '14:45:00', calcSeatPrice(seats.value[i]));
+      await addToCart(props.id, seats.value[i], chosenTime.value, chosenDate.value, calcSeatPrice(seats.value[i]));
     }
   }
 
-  async function addToCart(id: number, seat: string, time: string, price: number) {
+  async function addToCart(id: number, seat: string, time: string, date: Date, price: number) {
       if(seats.value.length === 0) return;
       try{
-        await cartApi.createCart(id, seat, time, price);
+        await cartApi.createCart(id, seat, time, date, price);
       } catch(e: any){
         console.error(e.message);
       }
   }
+
+  function onSubmit(path: string){
+    if(seats.value.length === 0){
+      error.value="Sitze nicht ausgewählt!";
+      return;
+    }
+
+    if(chosenTime.value.length === 0){
+      error.value="Zeit nicht ausgewählt!";
+      return;
+    }
+
+    if(chosenDate.value === null){
+      error.value="Datum nicht ausgewählt!"
+      return;
+    }
+
+    error.value = "";
+    repeatAddToCart()
+    router.push(path);
+  }
+
 
 </script>
 
@@ -105,16 +157,16 @@ const props = defineProps<{
       <div class="flex items-center justify-between w-full gap-2">
         <div class="flex-1">
           <label for="date" class="text-sm block mb-1">Date</label>
-          <select name="date" id="date" required class="block px-4 py-3 w-full ticket-border outline-none">
+          <select v-model="chosenDate" name="date" id="date" required class="cursor-pointer block px-4 py-3 w-full ticket-border outline-none">
+            <option disabled value="">Wähle einen Tag aus</option>
             <option v-for="(item, i) in nextDates" :value="item">{{ item.getUTCDate()}} {{ new Intl.DateTimeFormat("de-DE", { weekday: "long"}).format(item)}}</option>
           </select>
         </div>
         <div class="flex-1">
           <label for="time" class="text-sm block mb-1">Time</label>
-          <select name="time" id="time" required class="block px-4 py-3 w-full ticket-border outline-none">
-            <option value="10:00 Uhr">10:00 Uhr</option>
-            <option value="12:30 Uhr">12:30 Uhr</option>
-            <option value="16:45 Uhr">16:45 Uhr</option>
+          <select v-model="chosenTime" name="time" id="time" required class="cursor-pointer block px-4 py-3 w-full ticket-border outline-none">
+            <option disabled value="">Wähle eine Zeit aus</option>
+            <option v-for="item in movie?.programtime" :value="item.time">{{ item.time.slice(0,5) }} Uhr</option>
           </select>
         </div>
       </div>
@@ -127,7 +179,7 @@ const props = defineProps<{
         <div v-for="i in 10" class="mb-2 flex items-center justify-between">
           <span class="font-bold">{{ String.fromCharCode(96 + i).toUpperCase()}}</span>
           <div class="flex items-center justify-center w-full gap-2">
-            <div :class="isActive(seatId(i,j)) ? 'active' : 'inactive'" @click="addSeat(seatId(i,j))" v-for="j in 16" class="cursor-pointer w-[40px] h-[40px] rounded-t-xl bg-[rgb(240,240,240)]" ></div>
+            <div :class="isOccupied(seatId(i,j)) ? 'occupied' : isActive(seatId(i,j)) ? 'active' : 'inactive'" @click="addSeat(seatId(i,j))" v-for="j in 16" class="cursor-pointer w-[40px] h-[40px] rounded-t-xl bg-[rgb(240,240,240)]" ></div>
           </div>
           <span class="font-bold">{{ String.fromCharCode(96 + i).toUpperCase() }}</span>
         </div>
@@ -172,10 +224,15 @@ const props = defineProps<{
           <span class="text-2xl font-bold">Gesamt: {{ calcAllSeatPrice() }} CHF</span>
         </div>
         <div class="flex items-center justify-center w-fit gap-4 flex-row">
-          <RouterLink to="/movie" @click="repeatAddToCart" class="cursor-pointer text-md bg-[var(--color-normal-text)] text-[var(--color-primary-text)] px-6 py-4 font-bold rounded-full">Speichern</RouterLink>
-          <RouterLink to="/shoppingcart" @click="repeatAddToCart" class="cursor-pointer text-md bg-[var(--color-primary)] text-[var(--color-primary-text)] px-6 py-4 font-bold rounded-full">Bestätigen & Zahlen</RouterLink>
+          <button @click="onSubmit('/movie')" class="cursor-pointer text-md bg-[var(--color-normal-text)] text-[var(--color-primary-text)] px-6 py-4 font-bold rounded-full border-2 hover:bg-[var(--color-secondary)] hover:border-[var(--color-normal-text)] hover:text-[var(--color-normal-text)] transition-all duration-200">Speichern</button>
+          <button @click="onSubmit('/shoppingcart')" class="cursor-pointer text-md bg-[var(--color-primary)] text-[var(--color-primary-text)] px-6 py-4 font-bold rounded-full border-2 hover:bg-[var(--color-secondary)] hover:text-[var(--color-primary)] hover:border-[var(--color-primary)] transition-all duration-200">Bestätigen & Zahlen</button>
         </div>
       </div>
+
+      <div>
+        <p class="text-red-500 font-bold mt-3">{{ error }}</p>
+      </div>
+
     </div>
   </div>
 </template>
@@ -195,7 +252,17 @@ const props = defineProps<{
     background-color: var(--color-secondary);
   }
 
+  .occupied{
+    background-color: rgb(224, 224, 224);
+    cursor: not-allowed;
+  }
+
   .inactive{
     background-color: rgb(240,240,240);
+  }
+
+  .inactive:hover{
+    background-color: var(--color-secondary);
+    transition: all 0.2s ease-in-out;
   }
 </style>

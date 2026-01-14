@@ -1,5 +1,9 @@
 <script lang="ts" setup>
+import {computed, ref} from "vue";
+import {cartApi} from "../../api/cart.api.ts";
+
   const props = defineProps<{
+    id: string;
     image: string,
     title: string,
     date: Date,
@@ -7,6 +11,18 @@
     seat: string,
     price: number,
   }>()
+
+  const emit = defineEmits<{
+    (e: "delete", id: string): void
+  }>();
+
+  function handleDelete() {
+    emit("delete", props.id);
+  }
+
+  const dateObj = computed(() => new Date(props.date));
+  const d = dateObj.value.getDate().toString().padStart(2, "0");
+  const m = (dateObj.value.getMonth() + 1).toString().padStart(2, "0");
 </script>
 
 <template>
@@ -17,7 +33,7 @@
         <h3 class="text-[var(--color-normal-text)] text-xl font-bold">{{ props.title }}</h3>
         <div class="flex justify-center items-center gap-1">
           <i class="fa-regular fa-calendar"></i>
-          <span class="text-sm"> {{props.date}} • {{props.time}} Uhr</span>
+          <span class="text-sm"> {{ d }}.{{ m}}.{{dateObj.getFullYear()}} • {{props.time.slice(0,5)}} Uhr</span>
         </div>
         <div class="flex justify-center items-center gap-1">
           <i class="fa-solid fa-location-dot"></i>
@@ -38,7 +54,7 @@
         <div class="flex justify-center items-center mb-[1px]">
           <i class="fa-solid fa-trash text-xs"></i>
         </div>
-        <span class="text-xs underline">Entfernen</span>
+        <button @click="handleDelete" class="cursor-pointer text-xs underline">Entfernen</button>
       </div>
     </div>
   </div>

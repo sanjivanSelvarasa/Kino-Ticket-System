@@ -4,7 +4,7 @@ import {http} from "./http.ts";
 const base = import.meta.env.VITE_API_BASE;
 
 export const cartApi = {
-    async createCart(movieId: number, roomName: string, startTime: string, price: number) : Promise<any> {
+    async createCart(movieId: number, roomName: string, startTime: string, date: Date, price: number) : Promise<any> {
         const auth = useAuthStore();
 
         const r = await fetch(`${base}/cart`, {
@@ -15,6 +15,7 @@ export const cartApi = {
                 movieId: movieId,
                 roomName: roomName,
                 startTime: startTime,
+                date: date,
                 price: price,
             }),
             credentials: "include",
@@ -28,8 +29,6 @@ export const cartApi = {
         return await r.json();
     },
 
-    // async deleteCart(movieId: number, roomName: string, startTime: string, price: number) : Promise<any> {},
-    //
     // async updateCart(movieId: number, roomName: string, startTime: string, price: number) : Promise<any> {},
 
     async getCart() : Promise<any> {
@@ -42,7 +41,9 @@ export const cartApi = {
         });
     },
 
-    async deleteCart(movieId: number, roomName: string, startTime: string) : Promise<any> {
-
+    async deleteCart(ticketid: string) : Promise<any> {
+        return http<any>(`/cart/${ticketid}`, {
+            method: "DELETE",
+        })
     }
 }

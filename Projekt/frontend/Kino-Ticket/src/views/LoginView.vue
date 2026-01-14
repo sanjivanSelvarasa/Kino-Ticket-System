@@ -49,24 +49,26 @@ import {RouterLink, useRouter} from "vue-router";
           <p class="text-sm">Melde dich an, um Tickets zu buchen</p>
         </div>
 
-        <!--  Input fields-->
-        <div>
-          <InputField @input="assignEmail" inputName="email" inputType="email" label="E-Mail" placeholder="Max@email.com"></InputField>
-          <InputField @input="assignPassword" inputName="password" inputType="password" label="Passwort" placeholder="123Sicher"></InputField>
-        </div>
-
-        <!--      Angemeldet bleiben & Passwort vergessen?-->
-        <div class="flex items-center justify-between gap-2 my-3 text-xs">
-          <div class="flex items-center justify-start gap-1 cursor-pointer">
-            <input type="checkbox" id="checkbox" name="checkbox" class="bg-transparent cursor-pointer"/>
-            <label for="checkbox" class="cursor-pointer">Angemeldet bleiben</label>
+        <form @submit.prevent="submit">
+          <!--  Input fields-->
+          <div>
+            <InputField @input="assignEmail" inputName="email" inputType="email" label="E-Mail" placeholder="Max@email.com"></InputField>
+            <InputField @input="assignPassword" inputName="password" inputType="password" label="Passwort" placeholder="123Sicher"></InputField>
           </div>
-          <RouterLink style="color: var(--color-secondary-text)" class="underline" to="/">Passwort vergessen?</RouterLink>
-        </div>
 
-        <p v-if="error" class="text-red-600 py-2">{{ error }}</p>
+          <!--      Angemeldet bleiben & Passwort vergessen?-->
+          <div class="flex items-center justify-between gap-2 my-3 text-xs">
+            <div class="flex items-center justify-start gap-1 cursor-pointer">
+              <input type="checkbox" id="checkbox" name="checkbox" class="bg-transparent cursor-pointer"/>
+              <label for="checkbox" class="cursor-pointer">Angemeldet bleiben</label>
+            </div>
+            <RouterLink style="color: var(--color-secondary-text)" class="underline" to="/">Passwort vergessen?</RouterLink>
+          </div>
 
-        <button @click="submit" :style="{ border: 'none' }" style="background-color: var(--color-primary); color: var(--color-primary-text)" class="w-full rounded-xl mt-2"><span class="font-base font-bold">Anmelden</span></button>
+          <p v-if="error" class="text-red-600 py-2">{{ error }}</p>
+
+          <button type="submit" :style="{ border: 'none' }" style="background-color: var(--color-primary); color: var(--color-primary-text)" class="w-full rounded-xl mt-2"><span class="font-base font-bold">Anmelden</span></button>
+        </form>
 
         <div id="divider" class="my-4 w-full">
           <span class="flex items-center gap-2 uppercase text-xs">oder</span>

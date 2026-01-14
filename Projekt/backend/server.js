@@ -20,19 +20,30 @@ const PGRST = process.env.PGRST_URL;
 
 // DB durchgeben
 app.get("/api/movie", async (req, res) => {
-  const qs = new URLSearchParams(req.query).toString();
-  const url = `${PGRST}/movie?select=*${qs ? "&" + qs : ""}`;
-
-  console.log("Proxy ->", url); // wichtig zum Debuggen
-  const r = await fetch(url);
-
-  res.status(r.status).send(await r.text());
+  try{
+    const r = await pool.query(
+      `SELECT 
+        m.*,
+        COALESCE(
+          json_agg(p.time ORDER BY p.time)
+          FILTER (WHERE p.programtimeid IS NOT NULL),
+          '[]'
+          ) AS programtime  
+      FROM movie m
+      LEFT JOIN programtime p ON m.movieid = p.fk_movieid
+      GROUP BY m.movieid`
+    )
+    res.status(200).json(r.rows);
+  }
+  catch(e){
+    res.status(400).json({ message: 'Movie konnte nicht geladen werden.'});
+  }
 });
 
 
 app.get("/api/movie/:id", async (req, res) => {
   const id = Number(req.params.id);
-  const r = await fetch(`${PGRST}/movie?movieid=eq.${id}&limit=1&select=*`);
+  const r = await fetch(`${PGRST}/movie?movieid=eq.${id}&limit=1&select=*, programtime(time)`);
   res.status(r.status).send(await r.text());
 });
 
@@ -210,13 +221,44 @@ app.post("/api/room", async (req, res) => {
     }
 })
 
-app.get("/api/room", async (req, res) => {
+app.get("/api/rooms", async (req, res) => {
   const qs = new URLSearchParams(req.query).toString();
   const url = `${PGRST}/room?select=*${qs ? "&" + qs : ""}`;
 
   const r = await fetch(url);
   res.status(r.status).send(await r.text());
 })
+
+app.get("/api/room", async (req, res) => {
+  const { movieId, date, time } = req.query;
+
+  if (!movieId || !date || !time) {
+    return res.status(400).json({ message: "missing parameters" });
+  }
+
+  try {
+    const r = await pool.query(
+      `
+      SELECT
+        r.roomid,
+        r.name,
+        r.description
+      FROM show s
+      JOIN room r ON r.roomid = s.fk_room_id
+      WHERE s.fk_movie_id = $1
+        AND s.date = $2
+        AND s.start_time = $3
+      `,
+      [movieId, date, time]
+    );
+
+    return res.status(200).json(r.rows);
+  } catch (e) {
+    console.error(e);
+    return res.status(500).json({ message: "rooms could not be loaded" });
+  }
+});
+
 
 // show
 app.post("/api/show", async (req, res) => {
@@ -288,9 +330,9 @@ function requireAuth(req, res, next) {
 
 app.post("/api/cart", requireAuth, async (req, res) => {
   const userId = req.user.sub;
-  const { movieId, roomName, startTime, price } = req.body ?? {};
+  const { movieId, roomName, startTime, date, price } = req.body ?? {};
 
-  if( !movieId || userId == null || !roomName || !startTime || price == null) return res.status(400).json({message: "Missing data"})
+  if( !movieId || userId == null || !roomName || !startTime || price == null || !date) return res.status(400).json({message: "Missing data"})
 
   const client = await pool.connect();
 
@@ -307,10 +349,10 @@ app.post("/api/cart", requireAuth, async (req, res) => {
     const roomId = r.rows[0].roomid;
   
     const s = await client.query(
-      `INSERT INTO Show (fk_movie_id, fk_room_id, start_time, price)
-      VALUES ($1, $2, $3, $4)
+      `INSERT INTO Show (fk_movie_id, fk_room_id, start_time, date, price)
+      VALUES ($1, $2, $3, $4, $5)
       RETURNING ShowID`,
-      [movieId, roomId, startTime, price]
+      [movieId, roomId, startTime, date, price]
     )
 
     const showId = s.rows[0].showid;
@@ -358,18 +400,21 @@ app.get("/api/cart", requireAuth, async (req, res) => {
 
 })
 
-app.delete('/api/cart', (req, res) => {
-  const { movieId, roomName, startTime} = req.body ?? {};
-
-  if(!movieId || !roomName || !startTime) return res.status(400).json({ message: 'fehlende Daten'});
+app.delete('/api/cart/:ticketId', async (req, res) => {
+  const ticketId = Number(req.params.ticketId)
+  if(!ticketId) return res.status(400).json({ message: 'missing Data'});
 
   try{
     const r = await pool.query(
       `
-        DELETE FROM Ticket 
-        WHERE 
-      `
+        DELETE FROM Ticket t
+        WHERE t.ticketid = $1
+      `,
+      [ticketId]
     )
+    res.sendStatus(200);
+  }catch(e){
+    res.status(500).json({message: "Ticket delete failed"})
   }
 })
 

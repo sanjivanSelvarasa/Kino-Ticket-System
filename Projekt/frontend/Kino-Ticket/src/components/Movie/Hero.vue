@@ -12,6 +12,7 @@
     ageRating: number,
     genre: string,
     description: string,
+    programTimes: { time: string}[],
   }>()
 
 </script>
@@ -20,7 +21,7 @@
   <div class="w-screen flex justify-center items-center">
   <header style="font-family: 'Bebas Neue', sans-serif;" class="mt-10 flex items-center justify-between flex-row-reverse px-10 min-h-screen tracking-wider gap-40 max-w-[1700px] max-xl:flex-col-reverse">
     <TransitionGroup name="fade-slide" tag="div" appear>
-      <div key="image" :style="{ backgroundImage: `url(${props.image})`, transitionDelay: `${0 * 80}ms`}" class="bg-right bg-cover aspect-square border-6 border-[var(--color-secondary)] rounded-2xl h-[40rem] max-md:w-full"></div>
+      <div key="image" :style="{ backgroundImage: `url(${props.image})`, transitionDelay: `${0 * 80}ms`}" class="bg-right bg-cover aspect-square border-6 border-[var(--color-secondary)] rounded-2xl h-[35rem] max-md:w-full"></div>
     </TransitionGroup>
       <TransitionGroup name="fade-slide" tag="div" class="w-fit max-w-[550px]" appear>
       <div key="awards" :style="{ transitionDelay: `${0 * 80}ms` }" style="background-color: var(--color-secondary); color: var(--color-secondary-text); " class="flex items-center justify-start gap-2 overflow-x-auto px-4 py-2 mb-5 text-sm rounded-sm w-fit font-bold">
@@ -66,9 +67,7 @@
       <div key="time" :style="{ transitionDelay: `${8 * 80}ms` }" class="mt-6 w-full ">
         <span class="block mb-2">Heute im Program</span>
         <div class="flex items-center justify-start gap-4 w-full">
-          <span style="background-color: rgba(26, 15, 10, 0.1)" class="py-2 px-4 rounded-md">10:45</span>
-          <span style="background-color: rgba(26, 15, 10, 0.1)" class="py-2 px-4 rounded-md">13:40</span>
-          <span style="background-color: rgba(26, 15, 10, 0.1)" class="py-2 px-4 rounded-md">18:15</span>
+          <span v-for="item in props.programTimes" style="background-color: rgba(26, 15, 10, 0.1)" class="py-2 px-4 rounded-md">{{ item.time.slice(0,5) }}</span>
         </div>
       </div>
     </TransitionGroup>

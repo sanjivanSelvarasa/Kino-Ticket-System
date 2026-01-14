@@ -83,7 +83,7 @@ const visibleMovies = computed(() =>
 </script>
 
 <template>
-    <Hero v-if="selectedMovie?.movieid" :id="selectedMovie.movieid" :image="selectedMovie.poster_path" :title="selectedMovie.title" :awards="selectedMovie.awards" :rating="selectedMovie.rating" :releaseDate="selectedMovie.releasedate" :length="selectedMovie.length" :ageRating="selectedMovie.agerating" :genre="selectedMovie.genre" :description="selectedMovie.description"></Hero>
+    <Hero v-if="selectedMovie?.movieid" :id="selectedMovie.movieid" :programTimes="selectedMovie.programtime" :image="selectedMovie.poster_path" :title="selectedMovie.title" :awards="selectedMovie.awards" :rating="selectedMovie.rating" :releaseDate="selectedMovie.releasedate" :length="selectedMovie.length" :ageRating="selectedMovie.agerating" :genre="selectedMovie.genre" :description="selectedMovie.description"></Hero>
     <Loading v-if="loading"></Loading>
   <div class="pb-15 px-10">
     <h2>Filme die dir gefallen könnten</h2>
@@ -101,7 +101,7 @@ const visibleMovies = computed(() =>
       </RouterLink>
     </div>
     <div class="grid gap-4 pb-4 overflow-x-hidden grid-flow-col auto-cols-[minmax(420px, 1fr)] w-full px-1 pt-3 ">
-      <TodayShows v-if="movies.length > 1" v-for="movie in visibleMovies" :id="movie.movieid" :title="movie.title" :image="movie.poster_path" :todayShow="todayShow" class="min-w-[320px]"></TodayShows>
+      <TodayShows v-if="movies.length > 1" v-for="movie in visibleMovies" :id="movie.movieid" :title="movie.title" :image="movie.poster_path" :programtime="movie.programtime" class="min-w-[320px]"></TodayShows>
       <Loading v-if="loading"></Loading>
     </div>
   </div>

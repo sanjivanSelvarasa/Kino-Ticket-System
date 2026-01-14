@@ -13,6 +13,22 @@
     text-rendering: optimizeLegibility;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+
+    scroll-behavior: smooth;
+    scrollbar-width: thin;
+    scrollbar-color: var(--color-primary) var(--color-secondary);
+}
+
+::-webkit-scrollbar-track {
+    background: #888;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #888;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #555;
 }
 
 body {
@@ -21,6 +37,7 @@ body {
     min-width: 320px;
     min-height: 100vh;
     position: relative;
+    overflow-x: hidden;
 }
 
 h1, h2{

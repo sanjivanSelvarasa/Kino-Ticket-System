@@ -30,6 +30,7 @@ DROP TABLE IF EXISTS Ticket, AppUser, Show, Room, ProgramTime, Movie CASCADE;
             fk_movie_id INT NOT NULL REFERENCES Movie(MovieID) ON DELETE CASCADE ,
             fk_room_id INT NOT NULL REFERENCES Room(RoomID) ON DELETE CASCADE,
             start_time TIME NOT NULL,
+            date DATE NOT NULL,
             price DECIMAL(5,2) NOT NULL
         );
 
