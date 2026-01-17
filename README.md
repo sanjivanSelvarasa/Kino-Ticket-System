@@ -1,4 +1,4 @@
-# Kino-Ticket-System (Website
+# Kino-Ticket-System (Website)
 
 Web-App zum Anzeigen von Filmen, Detailseiten, Trailer über TMDB und Ticket-/Warenkorb-Flow mit Login (JWT + Refresh Cookie).
 Stack: **Vue 3 + Vite + TypeScript + Pinia + Tailwind** (Frontend), **Node/Express** (Backend), **PostgreSQL + PostgREST** (DB/API) via Docker.
