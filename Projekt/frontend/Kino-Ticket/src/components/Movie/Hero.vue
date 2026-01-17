@@ -13,13 +13,13 @@
     genre: string,
     description: string,
     programTimes: { time: string}[],
+    trailer: string,
   }>()
-
 </script>
 
 <template>
   <div class="w-screen flex justify-center items-center">
-  <header style="font-family: 'Bebas Neue', sans-serif;" class="mt-10 flex items-center justify-between flex-row-reverse px-10 min-h-screen tracking-wider gap-40 max-w-[1700px] max-xl:flex-col-reverse">
+  <header style="font-family: 'Bebas Neue', sans-serif;" class="mt-10 flex items-center justify-between flex-row-reverse px-10 min-h-screen tracking-wider gap-40 max-w-[1700px] max-xl:flex-col-reverse max-xl:gap-10">
     <TransitionGroup name="fade-slide" tag="div" appear>
       <div key="image" :style="{ backgroundImage: `url(${props.image})`, transitionDelay: `${0 * 80}ms`}" class="bg-right bg-cover aspect-square border-6 border-[var(--color-secondary)] rounded-2xl h-[35rem] max-md:w-full"></div>
     </TransitionGroup>
@@ -56,12 +56,12 @@
           <div>Tickets buchen</div>
         </RouterLink>
 
-        <button class="bg-[var(--color-normal-text)] text-[var(--color-primary-text)] cursor-pointer font-bold flex gap-2 py-4 px-6 rounded-md border-2 border-transparent hover:border-[var(--color-normal-text)] hover:bg-[var(--color-primary-text)] hover:text-[var(--color-normal-text)] hover:scale-[1.01] transition-all duration-500">
+        <a :href="props.trailer" target="_blank" class="bg-[var(--color-normal-text)] text-[var(--color-primary-text)] cursor-pointer font-bold flex gap-2 py-4 px-6 rounded-md border-2 border-transparent hover:border-[var(--color-normal-text)] hover:bg-[var(--color-primary-text)] hover:text-[var(--color-normal-text)] hover:scale-[1.01] transition-all duration-500">
           <div class="flex items-center justify-center">
             <i class="fa-solid fa-info"></i>
           </div>
           <span>Trailer ansehen</span>
-        </button>
+        </a>
       </div>
 
       <div key="time" :style="{ transitionDelay: `${8 * 80}ms` }" class="mt-6 w-full ">

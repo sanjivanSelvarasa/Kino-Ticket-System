@@ -4,9 +4,9 @@ const props = defineProps<{
   price: number,
 }>()
 
-function doAlert(){
-  alert('Du hast die Tickets gekauft');
-}
+const emit = defineEmits<{
+  (e: 'submit'): void;
+}>()
 </script>
 
 <template>
@@ -14,8 +14,8 @@ function doAlert(){
     <h3 class="text-2xl font-bold">Zusammenfassung</h3>
     <div class="w-full flex justify-between items-start flex-col gap-3">
       <div class="w-full flex justify-between items-center gap-1">
-        <span>Artikel ({{ props.artical }})</span>
-        <span>{{ props.price }} CHF</span>
+        <span>Artikel ({{ props.artical ? props.artical : 0  }})</span>
+        <span>{{ props.price ? props.price : 0 }} CHF</span>
       </div>
       <div class="w-full flex justify-between items-center gap-1">
         <span>Buchungsgebühr</span>
@@ -27,7 +27,7 @@ function doAlert(){
       <span class="text-xl font-bold">Gesamt</span>
       <span>{{ props.price + 2.5}} CHF</span>
     </div>
-    <button @click="doAlert" class="cursor-pointer w-full rounded-lg bg-[var(--color-primary)] px-4 py-4 font-bold text-md border-2 border-[var(--color-primary)] hover:bg-[var(--color-secondary)] hover:text-[var(--color-secondary-text)] transition-all duration-200">Zur Kasse</button>
+    <button @click="emit('submit')" class="cursor-pointer w-full rounded-lg bg-[var(--color-primary)] px-4 py-4 font-bold text-md border-2 border-[var(--color-primary)] hover:bg-[var(--color-secondary)] hover:text-[var(--color-secondary-text)] transition-all duration-200">Zur Kasse</button>
   </div>
 </template>
 

@@ -1,5 +1,5 @@
 import {useAuthStore} from "../stores/auth.ts";
-import {http} from "./http.ts";
+import {apiFetch} from "../lib/api.ts";
 
 const base = import.meta.env.VITE_API_BASE;
 
@@ -29,21 +29,43 @@ export const cartApi = {
         return await r.json();
     },
 
-    // async updateCart(movieId: number, roomName: string, startTime: string, price: number) : Promise<any> {},
+    async updateCart(ticketId: string) : Promise<any> {
+        const r = await apiFetch(`${base}/cart`, {
+            method: "PATCH",
+            headers: {"Content-Type": "application/json"},
+            body: JSON.stringify({
+                ticketId: ticketId,
+            })
+        });
+
+        if(!r.ok) {
+            throw new Error(await r.text());
+        }
+
+        return await r.json();
+    },
 
     async getCart() : Promise<any> {
-        const auth = useAuthStore();
-        return http<any>("/cart", {
+        const r = await apiFetch(`${base}/cart`, {
             method: "GET",
-            headers: {
-                ...(auth.accessToken ? { Authorization: `Bearer ${auth.accessToken}` } : {}),
-            }
         });
+
+        if(!r.ok) {
+            throw new Error(await r.text());
+        }
+
+        return await r.json()
     },
 
     async deleteCart(ticketid: string) : Promise<any> {
-        return http<any>(`/cart/${ticketid}`, {
+        const r = await apiFetch(`${base}/cart/${ticketid}`, {
             method: "DELETE",
         })
+
+        if(!r.ok) {
+            throw new Error(await r.text());
+        }
+
+        return r.status === 204 ? null : await r.json();
     }
 }

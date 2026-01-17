@@ -75,7 +75,7 @@ function scrollRight(index: number){
 </script>
 
 <template>
-  <Hero v-if="randomIndices.length > 1" :id="movies[randomIndices[0]].movieid" :image="movies[randomIndices[0]].poster_path" :title="movies[randomIndices[0]].title" :awards="movies[randomIndices[0]].awards" :rating="movies[randomIndices[0]].rating" :releaseDate="movies[randomIndices[0]].releasedate" :length="movies[randomIndices[0]].length" :ageRating="movies[randomIndices[0]].agerating" :genre="movies[randomIndices[0]].genre" :description="movies[randomIndices[0]].description"></Hero>
+  <Hero v-if="randomIndices.length > 1" :id="movies[randomIndices[0]].movieid" :programTimes="movies[randomIndices[0]].programtime" :trailer="movies[randomIndices[0]].trailer ?? '' " :image="movies[randomIndices[0]].poster_path ?? '' " :title="movies[randomIndices[0]].title" :awards="movies[randomIndices[0]].awards ?? '' " :rating="movies[randomIndices[0]].rating ?? ''" :releaseDate="movies[randomIndices[0]].releasedate" :length="movies[randomIndices[0]].length" :ageRating="movies[randomIndices[0]].agerating" :genre="movies[randomIndices[0]].genre" :description="movies[randomIndices[0]].description"></Hero>
 
   <main class="px-10">
     <div v-for="i in uniqueGenre.length" class="relative">

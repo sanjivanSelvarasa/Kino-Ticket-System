@@ -33,7 +33,7 @@ import {cartApi} from "../../api/cart.api.ts";
         <h3 class="text-[var(--color-normal-text)] text-xl font-bold">{{ props.title }}</h3>
         <div class="flex justify-center items-center gap-1">
           <i class="fa-regular fa-calendar"></i>
-          <span class="text-sm"> {{ d }}.{{ m}}.{{dateObj.getFullYear()}} • {{props.time.slice(0,5)}} Uhr</span>
+          <span class="text-sm"> {{ d }}.{{ m}}.{{dateObj.getFullYear()}} • {{time ? props.time.slice(0,5) : props.time }} Uhr</span>
         </div>
         <div class="flex justify-center items-center gap-1">
           <i class="fa-solid fa-location-dot"></i>

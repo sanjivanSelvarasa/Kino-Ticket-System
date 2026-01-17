@@ -22,13 +22,15 @@ const PGRST = process.env.PGRST_URL;
 app.get("/api/movie", async (req, res) => {
   try{
     const r = await pool.query(
-      `SELECT 
+      `SELECT
         m.*,
         COALESCE(
-          json_agg(p.time ORDER BY p.time)
-          FILTER (WHERE p.programtimeid IS NOT NULL),
-          '[]'
-          ) AS programtime  
+          json_agg(
+            json_build_object('time', p.time)
+            ORDER BY p.time
+          ) FILTER (WHERE p.programtimeid IS NOT NULL),
+          '[]'::json
+        ) AS programtime
       FROM movie m
       LEFT JOIN programtime p ON m.movieid = p.fk_movieid
       GROUP BY m.movieid`
@@ -46,6 +48,22 @@ app.get("/api/movie/:id", async (req, res) => {
   const r = await fetch(`${PGRST}/movie?movieid=eq.${id}&limit=1&select=*, programtime(time)`);
   res.status(r.status).send(await r.text());
 });
+
+app.get("/api/movies/:id/trailer", async (req, res) => {
+  const r = await fetch(
+    `https://api.themoviedb.org/3/movie/${req.params.id}/videos?language=de-DE`,
+    { headers: { Authorization: `Bearer ${TMDB_Token}` } }
+  );
+
+  const data = await r.json();
+
+  const trailer = data.results.find(
+    v => v.type === "Trailer" && v.site === "YouTube"
+  );
+
+  res.json(trailer ?? null);
+});
+
 
 // TMDB Suchfunktion
 app.get("/api/tmdb/search", async (req, res) => {
@@ -214,7 +232,7 @@ app.post("/api/room", async (req, res) => {
       RETURNING *`,
       [name]
     )
-    return res.status(200).json(rows[0]);
+    return res.status(200).json(r.rows[0]);
   }
   catch(e){ 
       return res.status(500).json({message: "Room failed"})
@@ -270,7 +288,7 @@ app.post("/api/show", async (req, res) => {
     const r = await pool.query(
       `INSERT INTO Show (fk_movie_id, fk_room_id, start_time, price)
       VALUES ($1, $2, $3, $4)
-      RETURNING *`
+      RETURNING *`,
       [movieId, roomId, startTime, price]
     )
     return res.status(200).json(r.rows[0])
@@ -384,12 +402,23 @@ app.get("/api/cart", requireAuth, async (req, res) => {
   try{
     const r = await pool.query(
       `
-      SELECT * FROM Ticket
+      SELECT
+        Ticket.TicketID as ticketid,
+        s.ShowID as showid,
+        s.start_time,
+        s.date,
+        s.price,
+        Movie.MovieID as movieid,
+        Movie.title,
+        Movie.image,
+        Room.RoomID as roomid,
+        Room.name
+      FROM Ticket
       INNER JOIN Show s ON Ticket.fk_showID = s.ShowID
       INNER JOIN AppUser ON Ticket.fk_userID = AppUser.UserID
       INNER JOIN Movie ON s.fk_movie_id = Movie.MovieID
       INNER JOIN Room ON s.fk_room_id = Room.RoomID
-      WHERE AppUser.UserID = $1
+      WHERE AppUser.UserID = $1 AND Ticket.status = 'IN_CART'
       `,
       [userId]
     );
@@ -398,6 +427,31 @@ app.get("/api/cart", requireAuth, async (req, res) => {
     res.status(500).json({ message: "get cart failed"})
   }
 
+})
+
+app.patch("/api/cart", async (req, res) => {
+  const { ticketId } = req.body ?? {}
+
+  if(ticketId == null) return res.status(400).json({ message: 'missing data' })
+
+  try{
+    const r = await pool.query(
+      `
+      UPDATE Ticket
+      SET status = 'BOUGHT'
+      WHERE Ticket.Ticketid = $1 AND status = 'IN_CART'
+      `, 
+      [ticketId]
+    )
+    
+    if (r.rowCount === 0)
+      return res.status(404).json({ message: "ticket not found or not in cart" });
+
+    res.status(200).json({ success: true })
+  }catch(e){
+    console.error(e)
+    return res.status(500).json({ message: 'ticket update failed'})
+  }
 })
 
 app.delete('/api/cart/:ticketId', async (req, res) => {

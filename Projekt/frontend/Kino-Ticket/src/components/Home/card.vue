@@ -7,6 +7,7 @@
     release: Date,
     length: number,
     image: string
+    trailer: string,
   }>()
 </script>
 
@@ -26,11 +27,11 @@
       <p style="background-color: var(--color-transparent-text)" class="px-4 py-2 rounded-2xl backdrop-blur-lg">{{ props.release.getFullYear() }}</p>
       <p style="background-color: var(--color-transparent-text)" class="px-4 py-2 rounded-2xl backdrop-blur-lg">{{props.length}} Min</p>
     </div>
-    <div style="background-color: var(--color-transparent-text)" class="backdrop-blur-lg cursor-pointer flex items-center justify-start w-fit max-w-[50%] px-4 py-4 rounded-full hover:translate-x-[5px] transition-all duration-400">
+    <a @click.stop :href="props.trailer" target="_blank" style="background-color: var(--color-transparent-text)" class="backdrop-blur-lg cursor-pointer flex items-center justify-start w-fit max-w-[50%] px-4 py-4 rounded-full hover:translate-x-[5px] transition-all duration-400">
       <div style="background-color: var(--color-primary)" class="flex items-center justify-center w-10 h-10 px-4 py-4 rounded-full">
         <i class="fa-solid fa-play"></i>
       </div>
       <p class="ml-4 mr-4 font-bold">Jetzt abspielen</p>
-    </div>
+    </a>
   </RouterLink>
 </template>

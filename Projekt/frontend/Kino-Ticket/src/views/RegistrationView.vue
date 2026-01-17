@@ -28,24 +28,23 @@
   const success = ref<boolean>(false);
   async function createNewUserFunction() {
     try{
+      success.value = false;
       await auth.register(username.value, email.value, password.value);
-    }catch(e: any){
-      error.value = e ?? "Registration fehlgeschlagen"
-    }
-    finally {
       success.value = true;
       await router.push(`/`);
+    }catch(e: any) {
+      error.value = e ?? "Registration fehlgeschlagen"
     }
   }
 </script>
 
 <template>
-  <div style="font-family: 'Bebas Neue', sans-serif;" class="min-h-[100vh] flex items-center justify-center gap-4 mb-8 tracking-wide
+  <div style="font-family: 'Bebas Neue', sans-serif;" class="min-h-[100vh] flex items-center justify-center gap-4 mb-8 mt-10 tracking-wide
 ">
     <!--  Zurück Button-->
-    <div style="background-color: var(--color-secondary); color: var(--color-secondary-text)" class="absolute top-20 left-10 w-fit rounded-xl text-center text-base font-bold">
-      <RouterLink to="/"><button>Zurück</button></RouterLink>
-    </div>
+<!--    <div style="background-color: var(&#45;&#45;color-secondary); color: var(&#45;&#45;color-secondary-text)" class="absolute top-20 left-10 w-fit rounded-xl text-center text-base font-bold">-->
+<!--      <RouterLink to="/"><button>Zurück</button></RouterLink>-->
+<!--    </div>-->
 
 <!--    Der Login Screen-->
     <div>
@@ -77,7 +76,7 @@
 
             <p v-if="error" class="text-red-600 py-2">{{ error }}</p>
 
-            <button type="submit" :style="{ border: 'none' }" style="background-color: var(--color-primary); color: var(--color-primary-text)" class="w-full rounded-xl mt-2"><span class="font-base font-bold">Registrieren</span></button>
+            <button type="submit" class="w-full rounded-xl mt-2"><span class="font-base font-bold">Registrieren</span></button>
           </form>
 
           <div id="divider" class="my-4 w-full">
@@ -103,30 +102,33 @@
 <style scoped>
 @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Huninn&family=Roboto:ital,wght@0,100..900;1,100..900&display=swap');
 
-  #divider span::before, #divider span::after {
-    content: '';
-    flex: 1;
-    height: 1px;
-    background: rgba(255, 255, 255, 0.1);
-  }
+#divider span::before, #divider span::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: rgba(255, 255, 255, 0.1);
+}
 
-  button {
-    border-radius: 8px;
-    border: 2px solid var(--color-normal-text);
-    padding: 0.6em 1.2em;
-    font-size: 1em;
-    font-weight: 500;
-    font-family: inherit;
-    background-color: var(--color-secondary);
-    cursor: pointer;
-    transition: border-color 0.25s;
-  }
+button {
+  border-radius: 8px;
+  padding: 0.6em 1.2em;
+  font-size: 1em;
+  font-weight: 500;
+  font-family: inherit;
+  background-color: var(--color-primary);
+  color: var(--color-primary-text);
+  cursor: pointer;
+  transition: all 0.25s ease-in-out;
+  border: 2px solid var(--color-primary);
+}
 
-  button:hover {
-    border-color: var(--color-primary);
-  }
-  button:focus,
-  button:focus-visible {
-    outline: 2px auto var(--color-primary);
-  }
+button:hover {
+  border-color: var(--color-primary);
+  background-color: var(--color-secondary);
+  color: var(--color-secondary-text);
+}
+button:focus,
+button:focus-visible {
+  outline: 2px auto var(--color-primary);
+}
 </style>

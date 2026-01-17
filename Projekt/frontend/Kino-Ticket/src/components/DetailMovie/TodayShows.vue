@@ -3,7 +3,7 @@
     id: string,
     title: string,
     image: string,
-    programtime: string[],
+    programtime: { time: string}[],
   }>()
 </script>
 
@@ -13,7 +13,7 @@
     <div class="px-4 py-4">
       <p class="font-bold pb-2">{{ props.title }}</p>
       <div class="flex items-center justify-start gap-2 overflow-x-hidden w-full text-xs">
-        <span v-for="item in programtime" class="px-2 py-1 rounded-md bg-[var(--color-primary)] font-bold text-sm">{{ item.slice(0,5) }}</span>
+        <span v-for="item in programtime" class="px-2 py-1 rounded-md bg-[var(--color-primary)] font-bold text-sm">{{ item.time.slice(0,5) }}</span>
       </div>
     </div>
   </RouterLink>

@@ -1,14 +1,11 @@
 <script lang="ts" setup>
 import Card from "../components/Home/card.vue"
-import SearchBar from "../components/Home/SearchBar.vue";
 import Tag from "../components/Home/Tag.vue";
 import ShowCard from "../components/Home/ShowCard.vue";
 import SoonInCinemaCard from "../components/Home/SoonInCinemaCard.vue";
 import { moviesRepo } from "../api/moviesRepo";
 import {computed, onBeforeUnmount, onMounted, ref} from "vue";
 import type {Movie} from "../types/movie.ts";
-import {useAuthStore} from "../stores/auth.ts";
-import { searchMovies } from "../api/tmdb.api.ts";
 import Loading from "../components/layout/Loading.vue";
 
 const movies = ref<Movie[]>([]);
@@ -76,12 +73,10 @@ const showComingSoonCards = computed(() => Math.min(5, Math.floor(viewPortView.v
         <source src="../assets/video/landingpageAnim.mp4" type="video/mp4" />
       </video>
     </div>
-    <div class="max-w-[1714px] w-full mx-auto my-4 px-6 py-4 rounded-2xl bg-amber-200">
-      <SearchBar></SearchBar>
-
+    <div class="max-w-[1714px] w-full mx-auto my-4 p-6 rounded-2xl bg-amber-200">
       <!-- Hero Cards -->
       <section class="w-full flex items-center justify-center gap-4 mb-8">
-        <Card v-for="i in showHeroCards" v-if="randomIndices.length > 1 && movies.length > randomIndices.length" class="flex-1 min-w-[544.66px] max-w-full" :id="movies[randomIndices[i]].movieid" :image="movies[randomIndices[i]].poster_path" :title="movies[randomIndices[i]].title" :rating="movies[randomIndices[i]].rating" :genre="movies[randomIndices[i]].genre" :release="movies[randomIndices[i]].releasedate" :length="movies[randomIndices[i]].length"></Card>
+        <Card v-for="i in showHeroCards" v-if="randomIndices.length > 1 && movies.length > randomIndices.length" class="flex-1 min-w-[544.66px] max-w-full" :id="movies[randomIndices[i]].movieid" :trailer="movies[randomIndices[i]].trailer" :image="movies[randomIndices[i]].poster_path" :title="movies[randomIndices[i]].title" :rating="movies[randomIndices[i]].rating" :genre="movies[randomIndices[i]].genre" :release="movies[randomIndices[i]].releasedate" :length="movies[randomIndices[i]].length"></Card>
         <Loading v-if="loading"></Loading>
       </section>
 
@@ -109,7 +104,7 @@ const showComingSoonCards = computed(() => Math.min(5, Math.floor(viewPortView.v
         <h2>
           Demnächst im Kino
         </h2>
-        <div class="flex items-center justify-start gap-4 pb-4">
+        <div class="flex items-center justify-start gap-4">
           <SoonInCinemaCard v-if="randomIndices.length > 1 && movies.length > randomIndices.length" v-for="i in showComingSoonCards" :image="movies[i].poster_path" :id="movies[i].movieid" :title="movies[i].title" :release="movies[i].releasedate" class="min-w-[320.4px] max-w-full flex-1"></SoonInCinemaCard>
           <Loading v-if="loading"></Loading>
         </div>

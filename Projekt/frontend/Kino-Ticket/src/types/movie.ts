@@ -10,5 +10,6 @@ export type Movie = {
     genre: string;
     description: string;
     poster_path: string | null;
+    trailer: string | null;
     programtime: { time: string}[];
 };

@@ -19,10 +19,13 @@ async function updateCart() {
     cart.value = await cartApi.getCart()
 
     cart.value = await Promise.all(
-        cart.value.map(async (item:any)=> ({
-          ...item,
-          poster_image: await searchMovies(item.image),
-        }))
+        cart.value.map(async c => {
+          const tmdb = await searchMovies(c.title);
+          return {
+            ...c,
+            poster_path: tmdb?.poster_path ? `https://image.tmdb.org/t/p/w500${tmdb.poster_path}` : null,
+          };
+        })
     );
   }catch(e: any){
     error.value = e.message || 'Warenkorb laden schiefgelaufen';
@@ -46,6 +49,29 @@ async function onDelete(id: string) {
     await updateCart();
   }
 }
+
+async function onSubmit(){
+  for (let i = 0; i < cart.value.length; i++) {
+    await buyTicket(cart.value[i].ticketid);
+  }
+  alert('Vielen Dank fürs Einkaufen bei Kino Gold')
+  await updateCart();
+}
+
+async function buyTicket(ticketId:string){
+  try{
+    await cartApi.updateCart(ticketId)
+  }catch(e: any){
+    error.value = e.message ?? 'Ticket kaufen hat nicht funktioniert';
+  }
+}
+
+const totalPrice = computed(() => {
+  if (!Array.isArray(cart.value) || cart.value.length === 0) {
+    return 0;
+  }
+  return cart.value.reduce((acc, item) => acc + Number(item.price), 0);
+});
 </script>
 
 <template>
@@ -53,11 +79,11 @@ async function onDelete(id: string) {
     <h1 style="font-size: 50px" class="text-center">Warenkorb</h1>
       <div class="flex justify-between items-start gap-4 mx-2 max-lg:flex-col-reverse">
         <div class="flex flex-col justify-center items-center gap-5">
-          <Item v-if="!loading" v-for="item in cart" @delete="onDelete(item.ticketid)" :id="item.ticketid" :image="item.poster_image" :title="item.title" :date="item.date" :time="item.start_time" :seat="item.name" :price="item.price"></Item>
+          <Item v-if="!loading" v-for="item in cart" @delete="onDelete(item.ticketid)" :id="item.ticketid" :image="item.poster_path" :title="item.title" :date="item.date" :time="item.start_time" :seat="item.name" :price="item.price"></Item>
         </div>
-        <Summary v-if="!loading && cart.length !== 0" :artical="cart.length" :price="cart.reduce((acc, item) =>  acc + Number(item.price), 0)" class="max-lg:w-full"></Summary>
+        <Summary @submit="onSubmit" v-if="!loading && cart.length !== 0" :artical="cart.length" :price="totalPrice" class="max-lg:w-full"></Summary>
       </div>
-    <div v-if="cart.length === 0"  class="flex justify-center items-center gap-2 text-xl flex-nowrap w-full h-1/2">
+    <div v-if="cart.length === 0"  class="flex justify-center items-center gap-2 text-xl flex-nowrap w-screen h-[calc(100vh/2)] text-[var(--color-primary-text)]">
       <div class="flex justify-center items-center">
         <i class="fa-solid fa-cart-shopping"></i>
       </div>
