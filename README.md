@@ -21,7 +21,7 @@ Projekt/
 
 * **Node.js** (empfohlen: aktuelle LTS)
 * **Docker Desktop** (oder Docker Engine + Compose)
-* Freie Ports: **5173** (Frontend), **4000** (Backend), **3001** (PostgREST), **5432** (Postgres)
+* Freie Ports: **5173** (Frontend), **4000** (Backend), **5432** (Postgres)
 
 ---
 
