@@ -27,7 +27,7 @@ Projekt/
 
 ## Installation & Start (Quickstart)
 
-### 1) Datenbank + PostgREST starten
+### 1) Datenbank starten
 
 Im Projektroot (wo `compose.yml` liegt):
 
@@ -49,27 +49,6 @@ npm run dev
 ```
 
 Backend läuft standardmäßig auf: **[http://localhost:4000](http://localhost:4000)**
-
-#### Backend `.env`
-
-Datei: `Projekt/backend/.env`
-
-Benötigte Variablen:
-
-```env
-PORT=4000
-PGRST_URL=http://localhost:3001
-
-TMDB_Token=DEIN_TMDB_BEARER_TOKEN
-
-JWT_ACCESS_SECRET=irgendein_secret
-JWT_REFRESH_SECRET=irgendein_secret
-ACCESS_EXPIRES=10m
-REFRESH_EXPIRES=30d
-NODE_ENV=development
-```
-
-> Wichtig: Verwende deinen eigenen TMDB Bearer Token.
 
 ---
 
@@ -98,7 +77,6 @@ VITE_API_BASE=http://localhost:4000/api
 
 * Frontend: `http://localhost:5173`
 * Backend: `http://localhost:4000`
-* PostgREST: `http://localhost:3001`
 * Postgres: `localhost:5432` (User/Pass/DB kommen aus `compose.yml`)
 
 ---
@@ -114,6 +92,9 @@ VITE_API_BASE=http://localhost:4000/api
   * Cart anzeigen
   * Ticket „kaufen“ (Status update)
   * Ticket entfernen
+* Responsibles Desing
+* Animierte Webpages
+* Film Suchfunktion
 
 ---
 
@@ -161,7 +142,7 @@ docker compose -f compose.yml down -v
 
 ## Troubleshooting
 
-* **Ports belegt**: Prüfe ob 5173/4000/3001/5432 frei sind oder ändere sie in `.env` bzw. `compose.yml`.
+* **Ports belegt**: Prüfe ob 5173/4000/5432 frei sind oder ändere sie in `.env` bzw. `compose.yml`.
 * **DB nicht sauber**: `docker compose down -v` und erneut `up -d`.
 * **CORS**: Backend erlaubt aktuell `http://localhost:5173` (siehe `backend/server.js`). Wenn du eine andere Frontend-URL nutzt, anpassen.
 
